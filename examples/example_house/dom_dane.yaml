@@ -1,0 +1,173 @@
+# =====================================================================
+#  Example building (TEST FIXTURE) for archtool
+#  This file exists only to exercise the tool. The product is the
+#  compiler, not this house. Geometry: real outline of building 279
+#  (Kiedrzyn, Czestochowa) from the public land registry, straightened;
+#  interior layout is illustrative.
+#  Interpretation governed by SPEC.md (format_version 1.0).
+# =====================================================================
+
+building:
+  name: "Example house (test fixture, building 279)"
+  building_id: "246401_1.0430.279_BUD"
+  parcel_id: "246401_1.0430.AR_8.4/12"
+  ceiling_height: 280
+  exterior_wall_thickness: 30
+  partition_wall_thickness: 15
+  unit: "cm"
+  format_version: "1.0"
+  spec: "SPEC.md"
+
+points:
+  P1: [240, 0]
+  P2: [1380, 0]
+  P3: [1380, 1135]
+  P4: [0, 1135]
+  P5: [0, 330]
+  P6: [240, 330]
+  P7: [560, 0]
+  P8: [560, 1135]
+  P9: [0, 560]
+  P10: [560, 560]
+  P11: [560, 400]
+  P12: [1380, 400]
+  P13: [1050, 0]
+  P14: [1050, 400]
+  P15: [280, 560]
+  P16: [280, 1135]
+  P17: [0, 820]
+  P18: [280, 820]
+  P19: [280, 850]
+  P20: [560, 850]
+  P21: [110, 330]
+  P22: [210, 330]
+  P23: [850, 1135]
+  P24: [1150, 1135]
+  P25: [1380, 650]
+  P26: [1380, 950]
+  P27: [650, 0]
+  P28: [950, 0]
+  P29: [1150, 0]
+  P30: [1300, 0]
+  P31: [1380, 150]
+  P32: [1380, 300]
+  P33: [60, 1135]
+  P34: [210, 1135]
+  P35: [560, 330]
+
+outline: [P1, P2, P3, P4, P5, P6]
+
+walls:
+  - id: "W1"
+    from: P7
+    to: P8
+    thickness: 15
+    type: "load_bearing"
+  - id: "W2"
+    from: P9
+    to: P10
+    thickness: 15
+    type: "partition"
+  - id: "W3"
+    from: P11
+    to: P12
+    thickness: 15
+    type: "partition"
+  - id: "W4"
+    from: P13
+    to: P14
+    thickness: 15
+    type: "partition"
+  - id: "W5"
+    from: P15
+    to: P16
+    thickness: 15
+    type: "partition"
+  - id: "W6"
+    from: P17
+    to: P18
+    thickness: 15
+    type: "partition"
+  - id: "W7"
+    from: P19
+    to: P20
+    thickness: 15
+    type: "partition"
+
+openings:
+  - id: "D_wej"
+    type: "door"
+    from: P21
+    to: P22
+    sill: 0
+    height: 205
+  - id: "O_salon1"
+    type: "window"
+    from: P23
+    to: P24
+    sill: 40
+    height: 220
+  - id: "O_salon2"
+    type: "window"
+    from: P25
+    to: P26
+    sill: 40
+    height: 220
+  - id: "O_syp_gl"
+    type: "window"
+    from: P27
+    to: P28
+    sill: 90
+    height: 140
+  - id: "O_gab"
+    type: "window"
+    from: P29
+    to: P30
+    sill: 90
+    height: 140
+  - id: "O_syp2"
+    type: "window"
+    from: P31
+    to: P32
+    sill: 90
+    height: 140
+  - id: "O_syp3"
+    type: "window"
+    from: P33
+    to: P34
+    sill: 90
+    height: 140
+
+rooms:
+  - id: "hol"
+    name: "Entrance hall"
+    floor: "tiles"
+    outline: [P6, P35, P10, P9, P5]
+  - id: "salon"
+    name: "Living + kitchen"
+    floor: "wood"
+    outline: [P11, P12, P3, P8]
+  - id: "syp_glowna"
+    name: "Master bedroom"
+    floor: "wood"
+    outline: [P7, P13, P14, P11]
+  - id: "gabinet"
+    name: "Study"
+    floor: "wood"
+    outline: [P13, P2, P12, P14]
+  - id: "lazienka"
+    name: "Bathroom"
+    floor: "tiles"
+    outline: [P9, P15, P18, P17]
+  - id: "syp2"
+    name: "Kids bedroom"
+    floor: "wood"
+    outline: [P15, P10, P20, P19]
+  - id: "syp3"
+    name: "Kids bedroom"
+    floor: "wood"
+    outline: [P17, P18, P16, P4]
+  - id: "garderoba"
+    name: "Wardrobe"
+    floor: "wood"
+    outline: [P19, P20, P8, P16]
