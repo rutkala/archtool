@@ -51,13 +51,28 @@ The building's vertical extent becomes the Z axis.
 
 Each wall is a segment between two points (`from`, `to`) with attributes.
 
-- The `from`–`to` line is the wall **axis** (centre line).
-- `thickness` is split **half on each side** of the axis (±thickness/2,
-  perpendicular to the wall direction).
+- The `from`–`to` line is the wall **axis** (reference line).
+- `thickness` is the wall's thickness, in cm.
+- `justify` (optional, default `"center"`): how `thickness` is distributed
+  relative to the axis, perpendicular to the wall direction:
+  - `"center"` — split half on each side (±thickness/2). Default.
+  - `"left"` / `"right"` — the full thickness on one side, the axis becomes
+    that face's *opposite* edge. Defined relative to the direction of
+    travel from `from` to `to`: walking from `from` toward `to`, `"left"`
+    puts all the material on your left-hand side, `"right"` on your
+    right-hand side.
+
+  Use `"left"`/`"right"` so two colinear walls of *different* thickness can
+  share one face flush, without needing separate points for each wall —
+  both walls still connect at the exact same named point. Centering walls
+  of different thickness on the same axis point is valid but leaves their
+  faces offset by half the thickness difference on each side; that is a
+  deliberate design choice (a visible step), not an error.
 - `type`: `"load_bearing"` or `"partition"` — affects default thickness and
   drawing style, not the axis geometry.
 - Exterior walls come from `outline:` with thickness
-  `building.exterior_wall_thickness`; walls in `walls:` are interior walls.
+  `building.exterior_wall_thickness`, always `"center"`-justified; walls in
+  `walls:` are interior walls.
 
 ---
 

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "archtool"
+version = "0.1.0"
+description = "A compiler for buildings: turns a declarative YAML building spec into architecture and interior-design deliverables."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2",
+    "shapely>=2",
+    "typer>=0.12",
+    "pyyaml>=6",
+    "watchdog>=4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+]
+
+[project.scripts]
+archtool = "archtool.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
