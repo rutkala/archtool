@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import xml.etree.ElementTree as ET
 
 import pytest
@@ -8,8 +9,11 @@ from shapely.geometry import Polygon
 from shapely.ops import unary_union
 
 from archtool.backends.svg import (
+    GARAGE_GATE_COLOR,
+    WINDOW_LINE_COLOR,
     _extend_dangling_ends,
     _offset_range,
+    _render_opening,
     _wall_corners_at_point,
     _wall_joints,
     _wall_rectangle,
@@ -17,7 +21,7 @@ from archtool.backends.svg import (
     write_svg,
 )
 from archtool.pipeline import load_and_validate
-from archtool.resolved import ResolvedWall
+from archtool.resolved import Point, ResolvedOpening, ResolvedWall
 
 
 def test_render_svg_is_well_formed_xml(fixture_path) -> None:
@@ -198,18 +202,37 @@ def test_render_svg_includes_joint_patches_for_fixture(fixture_path) -> None:
         assert f'x="{x0:.2f}" y="{y0:.2f}" width="{x1 - x0:.2f}" height="{y1 - y0:.2f}"' in svg_text
 
 
+def _dangling_cap_far_corners(wall: ResolvedWall, point: Point) -> list[Point]:
+    """The two far corners of the square cap a dangling end should grow
+    into once extended (justify-aware: an off-center wall's cap isn't
+    symmetric around the axis point, only its own actual face corners,
+    pushed `thickness/2` further along the wall's axis, away from it).
+    """
+    (x1, y1), (x2, y2) = wall.p_from, wall.p_to
+    dx, dy = x2 - x1, y2 - y1
+    length = math.hypot(dx, dy)
+    if length == 0:
+        return []
+    ux, uy = dx / length, dy / length
+    away = (-ux, -uy) if point == wall.p_from else (ux, uy)
+    h = wall.thickness / 2
+    far = (point[0] + away[0] * h, point[1] + away[1] * h)
+    return _wall_corners_at_point(wall, far)
+
+
 def test_all_dangling_ends_covered_for_all_example_fixtures(all_example_paths) -> None:
-    # For a truly unconnected end (touched by only one wall), a symmetric
-    # disk of radius thickness/2 centered on the axis point is exactly
-    # what should be covered - sound for any justify, since nothing else
-    # is expected to contribute there.
+    # For a truly unconnected end (touched by only one wall), the cap's far
+    # corners - the wall's own (justify-aware) face corners, pushed
+    # thickness/2 further along its axis - are exactly what the extension
+    # in _extend_dangling_ends should fill. A symmetric disk around the
+    # bare axis point is the wrong shape once a wall can be off-center.
     for path in all_example_paths:
         model, _ = load_and_validate(path)
         all_walls = model.all_walls()
         wall_ends = _extend_dangling_ends(all_walls)
         rects = [Polygon(_wall_rectangle(*wall_ends[w.id], w.thickness, w.justify)) for w in all_walls]
         patches = [Polygon([(x0, y0), (x1, y0), (x1, y1), (x0, y1)]) for x0, y0, x1, y1 in _wall_joints(all_walls)]
-        union = unary_union(rects + patches)
+        union = unary_union(rects + patches).buffer(0.01)  # the cap's far edge sits exactly on the union boundary
 
         counts: dict[tuple[float, float], int] = {}
         for w in all_walls:
@@ -220,8 +243,37 @@ def test_all_dangling_ends_covered_for_all_example_fixtures(all_example_paths) -
             for point in (wall.p_from, wall.p_to):
                 if counts[point] >= 2:
                     continue  # a real junction, covered by the corner-based test below
-                disk = ShapelyPoint(point).buffer(wall.thickness / 2 - 0.01, quad_segs=16)
-                assert union.covers(disk), f"{path.name}: {wall.id} dangling end {point} is not fully covered"
+                for corner in _dangling_cap_far_corners(wall, point):
+                    assert union.covers(ShapelyPoint(corner)), (
+                        f"{path.name}: {wall.id} dangling end {point} cap corner {corner} is not covered"
+                    )
+
+
+def test_garage_gate_renders_distinct_symbol() -> None:
+    wall = ResolvedWall(id="W", p_from=(0.0, 0.0), p_to=(300.0, 0.0), thickness=30.0, type="load_bearing")
+    opening = ResolvedOpening(id="G", type="garage_gate", p_from=(50.0, 0.0), p_to=(250.0, 0.0), sill=0.0, height=220.0)
+
+    rendered = _render_opening(opening, (wall,), default_thickness=15.0)
+
+    assert GARAGE_GATE_COLOR in rendered
+    assert WINDOW_LINE_COLOR not in rendered
+    assert "<path" not in rendered  # no swing arc - garage doors don't hinge open
+
+
+def test_empty_space_has_no_symbol_only_the_gap() -> None:
+    wall = ResolvedWall(id="W", p_from=(0.0, 0.0), p_to=(300.0, 0.0), thickness=30.0, type="load_bearing")
+    opening = ResolvedOpening(id="E", type="empty_space", p_from=(50.0, 0.0), p_to=(250.0, 0.0), sill=0.0, height=200.0)
+
+    rendered = _render_opening(opening, (wall,), default_thickness=15.0)
+
+    assert rendered.count("<") == 1  # only the one cut <polygon>, nothing drawn across it
+    assert "<polygon" in rendered
+
+
+def test_gruszowa_fixture_demonstrates_all_four_opening_types(gruszowa_fixture_path) -> None:
+    model, _ = load_and_validate(gruszowa_fixture_path)
+    types_present = {opening.type for opening in model.openings}
+    assert types_present == {"door", "window", "garage_gate", "empty_space"}
 
 
 def test_all_wall_junction_corners_covered_for_all_example_fixtures(all_example_paths) -> None:
