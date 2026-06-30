@@ -1,0 +1,141 @@
+# =====================================================================
+#  Example building (TEST FIXTURE) for archtool
+#  This file exists only to exercise the tool. The product is the
+#  compiler, not this house. Geometry reverse-engineered from the
+#  embedded `projectData` JSON in dom_viewer.html (a standalone JS plan
+#  viewer this house's design was originally exported to) — point names
+#  and wall/room ids are kept close to the original Polish abbreviations
+#  ("s_" = sciana nosna/load-bearing wall, "d_" = sciana dzialowa/
+#  partition wall, "n"/"w"/"d"-prefixed points = corner/junction/local
+#  axis points) so the fixture stays traceable back to its source.
+#  Only the walls, openings, and rooms present in that source export are
+#  included here — large parts of the outline have no rooms defined yet,
+#  which is fine: SPEC.md does not require full room coverage.
+#  Interpretation governed by SPEC.md (format_version 1.0).
+# =====================================================================
+
+building:
+  name: "Dom Gruszowa 60"
+  address: "ul. Gruszowa 60, Czestochowa"
+  ceiling_height: 285
+  exterior_wall_thickness: 30
+  partition_wall_thickness: 15
+  unit: "cm"
+  format_version: "1.0"
+  spec: "SPEC.md"
+
+points:
+  n1C: [0, 200]
+  n2C: [240, 200]
+  n2A: [240, 0]
+  n3A: [645, 0]
+  n3C: [645, 200]
+  n5C: [1240, 200]
+  n5B: [1240, 100]
+  n8B: [2718, 100]
+  n8D: [2718, 494]
+  n8aD: [2748, 494]
+  n8aG: [2748, 949]
+  n7G: [2470, 949]
+  n7H: [2470, 1110]
+  n6H: [1850, 1110]
+  n6F: [1850, 870]
+  n4F: [975, 870]
+  n4H: [975, 1110]
+  n3H: [645, 1110]
+  n3G: [645, 949]
+  n1G: [0, 949]
+  w3E: [645, 574]
+  w4E: [975, 574]
+  w5E: [1240, 574]
+  w5E1: [1455, 574]
+  w6E: [1850, 574]
+  w6E1: [1980, 574]
+  w6D1: [1980, 494]
+  d2C1: [240, 268]
+  d3C1: [645, 268]
+  d3E3: [645, 715]
+  d4E3: [975, 715]
+  d5E2: [1240, 690]
+  d51E2: [1455, 690]
+  oE1: [1255, 574]
+  oE2: [1440, 574]
+
+outline:
+  [n1C, n2C, n2A, n3A, n3C, n5C, n5B, n8B, n8D, n8aD, n8aG, n7G, n7H, n6H, n6F, n4F, n4H, n3H, n3G, n1G]
+
+walls:
+  - id: "s_3"
+    from: n3C
+    to: n3G
+    thickness: 30
+    type: "load_bearing"
+  - id: "s_4"
+    from: w4E
+    to: n4F
+    thickness: 30
+    type: "load_bearing"
+  - id: "s_6"
+    from: w6E
+    to: n6F
+    thickness: 30
+    type: "load_bearing"
+  - id: "s_6b"
+    from: w6D1
+    to: w6E1
+    thickness: 30
+    type: "load_bearing"
+  - id: "s_8D"
+    from: w6D1
+    to: n8D
+    thickness: 30
+    type: "load_bearing"
+  - id: "s_E"
+    from: w3E
+    to: w6E
+    thickness: 30
+    type: "load_bearing"
+  - id: "d_pgv"
+    from: n2C
+    to: d2C1
+    thickness: 15
+    type: "partition"
+    # The exterior wall above (30cm, axis x=240) and d_pgv (15cm) share
+    # the same axis. Centered, their faces would be 7.5cm out of line on
+    # both sides; "left" keeps d_pgv's full thickness on the utility-room
+    # side (toward larger x), flush with the exterior wall's face there,
+    # while still sharing the exact same connection point n2C.
+    justify: "left"
+  - id: "d_pgh"
+    from: d2C1
+    to: d3C1
+    thickness: 15
+    type: "partition"
+  - id: "d_sph"
+    from: d3E3
+    to: d4E3
+    thickness: 15
+    type: "partition"
+  - id: "d_wtv"
+    from: w5E
+    to: d5E2
+    thickness: 15
+    type: "partition"
+
+openings:
+  - id: "D1"
+    type: "door"
+    from: oE1
+    to: oE2
+    sill: 0
+    height: 200
+
+rooms:
+  - id: "garaz"
+    name: "Garage"
+    floor: "concrete"
+    outline: [n1C, n2C, d2C1, d3C1, n3G, n1G]
+  - id: "pom_gosp"
+    name: "Utility room"
+    floor: "tiles"
+    outline: [n2A, n3A, d3C1, d2C1]

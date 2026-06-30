@@ -42,7 +42,7 @@ can use.
 
 ## Current phase: v0.1 — build ONLY this
 
-- Parse + resolve `examples/example_house/dom_dane.yaml`.
+- Parse + resolve `examples/`.
 - Validate (schema + geometry; see "Validation").
 - **One output backend: SVG** (a 2D floor plan). No HTML. No 3D yet.
 - A CLI with two commands:
@@ -155,4 +155,4 @@ v0.1 work — they document where the compliance layer is going.
 ## Files already present
 
 - `SPEC.md` — interpretation contract (authoritative, versioned, English).
-- `examples/example_house/dom_dane.yaml` — the test fixture (English field names).
+- `examples/` — the test fixture (English field names).
