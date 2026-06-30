@@ -20,6 +20,7 @@ MARGIN_CM = 100.0
 WALL_COLOR = "#3a3a3a"
 OPENING_GAP_COLOR = "#ffffff"
 WINDOW_LINE_COLOR = "#3a8fd6"
+GARAGE_GATE_COLOR = "#b8860b"
 ROOM_STROKE_COLOR = "#1a1a1a"
 ROOM_LABEL_COLOR = "#1a1a1a"
 OUTLINE_STROKE_COLOR = "#000000"
@@ -185,6 +186,33 @@ def _door_swing(opening: ResolvedOpening) -> str:
     )
 
 
+def _garage_gate_symbol(opening: ResolvedOpening, thickness: float) -> str:
+    """A closed door slab across the opening, with short end ticks marking
+    the track at each jamb. Unlike `_door_swing`, this never swings into
+    the room — vehicle doors don't hinge open like a leaf door.
+    """
+    (x1, y1), (x2, y2) = opening.p_from, opening.p_to
+    dx, dy = x2 - x1, y2 - y1
+    length = math.hypot(dx, dy)
+    if length == 0:
+        return ""
+    ux, uy = dx / length, dy / length
+    px, py = -uy, ux
+    h = thickness / 2
+    parts = [
+        f'<line x1="{x1:.2f}" y1="{y1:.2f}" x2="{x2:.2f}" y2="{y2:.2f}" '
+        f'stroke="{GARAGE_GATE_COLOR}" stroke-width="4" />'
+    ]
+    for jx, jy in ((x1, y1), (x2, y2)):
+        a = (jx + px * h, jy + py * h)
+        b = (jx - px * h, jy - py * h)
+        parts.append(
+            f'<line x1="{a[0]:.2f}" y1="{a[1]:.2f}" x2="{b[0]:.2f}" y2="{b[1]:.2f}" '
+            f'stroke="{GARAGE_GATE_COLOR}" stroke-width="2" />'
+        )
+    return "\n".join(parts)
+
+
 def _render_opening(opening: ResolvedOpening, walls: tuple[ResolvedWall, ...], default_thickness: float) -> str:
     wall = find_wall_for_opening(opening, walls)
     thickness = wall.thickness if wall is not None else default_thickness
@@ -195,8 +223,11 @@ def _render_opening(opening: ResolvedOpening, walls: tuple[ResolvedWall, ...], d
     parts = [f'<polygon points="{_points_attr(cut)}" fill="{OPENING_GAP_COLOR}" />']
     if opening.type == "door":
         parts.append(_door_swing(opening))
-    else:
+    elif opening.type == "window":
         parts.append(_window_lines(opening, thickness, justify))
+    elif opening.type == "garage_gate":
+        parts.append(_garage_gate_symbol(opening, thickness))
+    # "empty_space": just the cut, no symbol — an open pass-through, no leaf.
     return "\n".join(parts)
 
 

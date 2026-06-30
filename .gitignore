@@ -8,4 +8,4 @@ dist/
 .vscode/
 
 # archtool build outputs (deterministic - regenerate with `archtool build`)
-examples/**/*.svg
+.examples/

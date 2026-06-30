@@ -76,14 +76,30 @@ Each wall is a segment between two points (`from`, `to`) with attributes.
 
 ---
 
-## 5. Openings: doors and windows (`openings:`)
+## 5. Openings (`openings:`)
 
 Each opening lies on the axis of some wall.
 
 - `from`, `to`: points giving the **width** of the opening along the wall axis.
-- `type`: `"door"` or `"window"`.
+- `type`: `"door"`, `"window"`, `"garage_gate"`, or `"empty_space"`.
+  - `"door"` — drawn with a leaf and a quarter-circle swing arc (radius =
+    opening width, hinged at `from`).
+  - `"window"` — drawn as two parallel lines across the wall thickness (the
+    panes); no leaf.
+  - `"garage_gate"` — a vehicle door: drawn as a single bar across the
+    opening with short end ticks (the closed door slab), not a swing —
+    garage doors don't swing into the room like a hinged door.
+  - `"empty_space"` — an open structural pass-through with no door leaf at
+    all: just the gap in the wall, nothing drawn across it. Use this for
+    wide openings that aren't actually a door (e.g. an archway) — forcing
+    a swing-door symbol onto an opening much wider than a real door leaf
+    produces a swing arc as wide as the opening, which doesn't represent
+    anything real.
+  - All four share the same geometry rules below (`sill`/`height`/wall-axis
+    placement) — `type` only changes how the opening is drawn, never the
+    cut itself.
 - `sill`: height of the opening's bottom edge above the room floor, in cm.
-  Doors use `sill: 0`.
+  Doors, garage gates, and empty-space openings use `sill: 0`.
 - `height`: opening height in cm (bottom edge to top edge).
 - In 3D the opening **cuts** a rectangle from the wall solid: from `sill` to
   `sill + height`, through the full wall thickness, over the `from`–`to` width.

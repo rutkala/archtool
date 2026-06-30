@@ -13,7 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 WallType = Literal["load_bearing", "partition"]
 WallJustify = Literal["left", "center", "right"]
-OpeningType = Literal["door", "window"]
+OpeningType = Literal["door", "window", "garage_gate", "empty_space"]
 FloorMaterial = Literal["wood", "tiles", "laminate", "concrete", "carpet"]
 
 

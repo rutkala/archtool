@@ -8,9 +8,12 @@
 #  ("s_" = sciana nosna/load-bearing wall, "d_" = sciana dzialowa/
 #  partition wall, "n"/"w"/"d"-prefixed points = corner/junction/local
 #  axis points) so the fixture stays traceable back to its source.
-#  Only the walls, openings, and rooms present in that source export are
-#  included here — large parts of the outline have no rooms defined yet,
-#  which is fine: SPEC.md does not require full room coverage.
+#  Walls and rooms are exactly the source export's data — large parts of
+#  the outline have no rooms defined yet, which is fine: SPEC.md does not
+#  require full room coverage. The source export only had one opening
+#  (D1); D_utility, W_utility, and Gate_garage were added on top of it to
+#  exercise all four opening types ("door", "window", "garage_gate",
+#  "empty_space") against this fixture.
 #  Interpretation governed by SPEC.md (format_version 1.0).
 # =====================================================================
 
@@ -60,6 +63,15 @@ points:
   d51E2: [1455, 690]
   oE1: [1255, 574]
   oE2: [1440, 574]
+  # Utility room's own back door (north exterior wall, n2A-n3A).
+  oUD1: [280, 0]
+  oUD2: [370, 0]
+  # Utility room window (west exterior wall, n2C-n2A).
+  oUW1: [240, 60]
+  oUW2: [240, 150]
+  # Garage vehicle door (south exterior wall, n3G-n1G).
+  oG1: [100, 949]
+  oG2: [380, 949]
 
 outline:
   [n1C, n2C, n2A, n3A, n3C, n5C, n5B, n8B, n8D, n8aD, n8aG, n7G, n7H, n6H, n6F, n4F, n4H, n3H, n3G, n1G]
@@ -121,14 +133,35 @@ walls:
     to: d5E2
     thickness: 15
     type: "partition"
+    justify: "left"
 
 openings:
   - id: "D1"
-    type: "door"
+    # 185cm is far wider than a real door leaf; modeled as an open
+    # structural pass-through rather than forcing an oversized door swing.
+    type: "empty_space"
     from: oE1
     to: oE2
     sill: 0
     height: 200
+  - id: "D_utility"
+    type: "door"
+    from: oUD1
+    to: oUD2
+    sill: 0
+    height: 200
+  - id: "W_utility"
+    type: "window"
+    from: oUW1
+    to: oUW2
+    sill: 90
+    height: 110
+  - id: "Gate_garage"
+    type: "garage_gate"
+    from: oG1
+    to: oG2
+    sill: 0
+    height: 220
 
 rooms:
   - id: "garaz"
