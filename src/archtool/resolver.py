@@ -69,8 +69,36 @@ class _Resolver:
 
     def __init__(self, bf: BuildingFile) -> None:
         self.bf = bf
-        self.points = bf.points
         self.diagnostics: list[Diagnostic] = []
+        # Build the merged points dict once: outline inline defs + explicit points:.
+        self.points = self._build_points_dict()
+
+    def _build_points_dict(self) -> dict[str, Point]:
+        """Merge inline outline point definitions with the explicit points: dict.
+
+        Outline points take precedence; a name appearing in both locations is
+        an error (the point is already defined by the outline entry).
+        """
+        points: dict[str, Point] = {}
+        for op in self.bf.outline:
+            if op.id in points:
+                self.diagnostics.append(
+                    Diagnostic("error", f"Outline point '{op.id}'", "duplicate point id in outline")
+                )
+            else:
+                points[op.id] = (op.x, op.y)
+        for name, coord in self.bf.points.items():
+            if name in points:
+                self.diagnostics.append(
+                    Diagnostic(
+                        "error",
+                        f"Point '{name}'",
+                        "already defined as an outline point; remove it from points: to avoid the conflict",
+                    )
+                )
+            else:
+                points[name] = coord
+        return points
 
     def _point(self, name: str, element: str) -> Point | None:
         if name not in self.points:
@@ -95,6 +123,47 @@ class _Resolver:
                 coords.append(p)
         return coords if ok else None
 
+    def _extract_axes(self) -> tuple[tuple[tuple[str, float], ...], tuple[tuple[str, float], ...]]:
+        """Collect x_axis / y_axis labels declared on outline points.
+
+        Each label maps to one coordinate value; if the same label appears
+        at two different values that is a validation error.  Returns two
+        tuples of (label, value) pairs sorted by coordinate value so that
+        SVG rendering draws gridlines in spatial left-to-right /
+        top-to-bottom order.
+        """
+        x_axes: dict[str, float] = {}
+        y_axes: dict[str, float] = {}
+        for op in self.bf.outline:
+            if op.x_axis is not None:
+                if op.x_axis in x_axes and x_axes[op.x_axis] != op.x:
+                    self.diagnostics.append(
+                        Diagnostic(
+                            "error",
+                            f"Outline point '{op.id}'",
+                            f"x_axis '{op.x_axis}' was already assigned to x={x_axes[op.x_axis]}, "
+                            f"conflicts with x={op.x}",
+                        )
+                    )
+                else:
+                    x_axes[op.x_axis] = op.x
+            if op.y_axis is not None:
+                if op.y_axis in y_axes and y_axes[op.y_axis] != op.y:
+                    self.diagnostics.append(
+                        Diagnostic(
+                            "error",
+                            f"Outline point '{op.id}'",
+                            f"y_axis '{op.y_axis}' was already assigned to y={y_axes[op.y_axis]}, "
+                            f"conflicts with y={op.y}",
+                        )
+                    )
+                else:
+                    y_axes[op.y_axis] = op.y
+        return (
+            tuple(sorted(x_axes.items(), key=lambda t: t[1])),
+            tuple(sorted(y_axes.items(), key=lambda t: t[1])),
+        )
+
     def resolve(self) -> ResolvedModel | None:
         b = self.bf.building
         building = ResolvedBuilding(
@@ -108,34 +177,41 @@ class _Resolver:
             format_version=b.format_version,
         )
 
-        outline_coords = self._points(self.bf.outline, "Building outline")
-        exterior_walls = self._resolve_exterior_walls(outline_coords, building.exterior_wall_thickness)
+        # Outline coordinates come directly from the inline definitions.
+        outline_coords = tuple((op.x, op.y) for op in self.bf.outline)
+
+        exterior_walls = self._resolve_exterior_walls()
         walls = self._resolve_walls()
         openings = self._resolve_openings()
         rooms = self._resolve_rooms()
+        x_axes, y_axes = self._extract_axes()
 
-        if outline_coords is None:
+        if len(outline_coords) < 3:
+            self.diagnostics.append(
+                Diagnostic("error", "Building outline", "outline must have at least 3 points")
+            )
             return None
 
         return ResolvedModel(
             building=building,
-            outline=tuple(outline_coords),
+            outline=outline_coords,
             exterior_walls=tuple(exterior_walls),
             walls=tuple(walls),
             openings=tuple(openings),
             rooms=tuple(rooms),
+            x_axes=x_axes,
+            y_axes=y_axes,
         )
 
-    def _resolve_exterior_walls(self, outline_coords: list[Point] | None, thickness: float) -> list[ResolvedWall]:
-        if outline_coords is None:
-            return []
-        names = self.bf.outline
-        n = len(outline_coords)
+    def _resolve_exterior_walls(self) -> list[ResolvedWall]:
+        ops = self.bf.outline
+        n = len(ops)
+        thickness = self.bf.building.exterior_wall_thickness
         return [
             ResolvedWall(
-                id=f"EXT_{names[i]}_{names[(i + 1) % n]}",
-                p_from=outline_coords[i],
-                p_to=outline_coords[(i + 1) % n],
+                id=f"EXT_{ops[i].id}_{ops[(i + 1) % n].id}",
+                p_from=(ops[i].x, ops[i].y),
+                p_to=(ops[(i + 1) % n].x, ops[(i + 1) % n].y),
                 thickness=thickness,
                 type="load_bearing",
             )
@@ -143,14 +219,19 @@ class _Resolver:
         ]
 
     def _resolve_walls(self) -> list[ResolvedWall]:
+        b = self.bf.building
         walls = []
         for w in self.bf.walls:
             p_from = self._point(w.from_, f"Wall '{w.id}'")
             p_to = self._point(w.to, f"Wall '{w.id}'")
+            thickness = w.thickness if w.thickness is not None else (
+                b.exterior_wall_thickness if w.type == "load_bearing" else b.partition_wall_thickness
+            )
             if p_from is not None and p_to is not None:
                 walls.append(
                     ResolvedWall(
-                        id=w.id, p_from=p_from, p_to=p_to, thickness=w.thickness, type=w.type, justify=w.justify
+                        id=w.id, p_from=p_from, p_to=p_to,
+                        thickness=thickness, type=w.type, justify=w.justify,
                     )
                 )
         return walls
@@ -162,7 +243,10 @@ class _Resolver:
             p_to = self._point(o.to, f"Opening '{o.id}'")
             if p_from is not None and p_to is not None:
                 openings.append(
-                    ResolvedOpening(id=o.id, type=o.type, p_from=p_from, p_to=p_to, sill=o.sill, height=o.height)
+                    ResolvedOpening(
+                        id=o.id, type=o.type, p_from=p_from, p_to=p_to,
+                        sill=o.sill, height=o.height, justify=o.justify,
+                    )
                 )
         return openings
 

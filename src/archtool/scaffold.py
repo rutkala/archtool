@@ -24,13 +24,31 @@ building:
   format_version: "1.0"
   spec: "SPEC.md"
 
+# outline defines the building perimeter.  Each entry is a named point
+# with its x/y coordinates (in cm; x right, y down).  Optional x_axis /
+# y_axis labels name the architectural grid lines and are drawn as dashed
+# reference lines in the SVG.
+outline:
+  - id: P1
+    x: 0
+    y: 0
+    x_axis: "1"
+    y_axis: "A"
+  - id: P2
+    x: 400
+    y: 0
+    x_axis: "2"
+  - id: P3
+    x: 400
+    y: 300
+    y_axis: "B"
+  - id: P4
+    x: 0
+    y: 300
+
+# Additional named points not on the outline (interior T-junctions,
+# opening endpoints, etc.).  Omit if all referenced points are in outline.
 points:
-  # Every coordinate used anywhere is named once here, in centimetres.
-  # [x, y]: x increases right, y increases down.
-  P1: [0, 0]
-  P2: [400, 0]
-  P3: [400, 300]
-  P4: [0, 300]
   D1a: [50, 0]
   D1b: [150, 0]
   R1: [20, 20]
@@ -38,15 +56,14 @@ points:
   R3: [380, 280]
   R4: [20, 280]
 
-outline: [P1, P2, P3, P4]
-
 walls: []
 # Add interior walls like:
 #   - id: "W1"
 #     from: P1
 #     to: P2
-#     thickness: 10
 #     type: "partition"   # or "load_bearing"
+#     # thickness is optional; defaults to partition_wall_thickness or
+#     # exterior_wall_thickness from the building block above.
 
 openings:
   - id: "D1"
@@ -81,12 +98,16 @@ archtool build dom_dane.yaml --watch   # re-render on every save
 ## Editing the building
 
 - `building:` — overall properties (ceiling height, wall thicknesses, ...).
-- `points:` — every coordinate used anywhere, named once, in centimetres.
-  `[x, y]`, x increases right, y increases down.
-- `outline:` — the building's exterior wall, as a list of point names in
-  perimeter order. Closes automatically (don't repeat the first point).
-- `walls:` — interior walls: a `from`/`to` point pair, `thickness`, and
-  `type` (`"load_bearing"` or `"partition"`).
+- `outline:` — the building's exterior perimeter as a list of named
+  points defined inline with their coordinates (cm; x right, y down).
+  Closes automatically (don't repeat the first point).  Add optional
+  `x_axis` / `y_axis` labels to draw architectural grid reference lines.
+- `points:` — additional named coordinates that don't appear on the
+  outline (interior junction points, opening endpoints, etc.).
+- `walls:` — interior walls: a `from`/`to` point pair, `type`
+  (`"load_bearing"` or `"partition"`), and optional `thickness`
+  (defaults to the building's `exterior_wall_thickness` or
+  `partition_wall_thickness` when omitted).
 - `openings:` — doors and windows: a `from`/`to` span on a wall's axis,
   plus `sill` and `height`.
 - `rooms:` — named polygons (point lists) with a `floor` material.

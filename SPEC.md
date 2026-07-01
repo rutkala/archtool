@@ -28,22 +28,65 @@ The building's vertical extent becomes the Z axis.
 
 ---
 
-## 2. Points (`points:`)
+## 2. Points
 
-- The **only** place containing `[x, y]` numbers.
-- Each corner is defined once under a unique name (e.g. `P1`, `P2`).
-- Everything else refers to points **by name**.
-- Resolution rule: replace each name with its `[x, y]` from `points:`.
-- A name used anywhere that is missing from `points:` is an **error**.
+Points can be defined in two places:
+
+### 2a. Inline in `outline:` (perimeter points)
+
+Perimeter corners are defined directly inside the `outline:` list — no
+separate `points:` entry is needed for them. Each entry is:
+
+```yaml
+- id: P1        # unique name referenced everywhere else
+  x: 0          # x coordinate in cm
+  y: 0          # y coordinate in cm
+  x_axis: "1"   # optional: names the vertical gridline at this x value
+  y_axis: "A"   # optional: names the horizontal gridline at this y value
+```
+
+`x_axis` and `y_axis` are **optional**. When present they label the
+architectural reference grid (see §2b). The same label must not appear at
+two different coordinate values — that is an error.
+
+### 2b. In `points:` (non-perimeter points)
+
+All other named coordinates — interior T-junction points, opening
+endpoints, etc. — go in the optional `points:` section as before:
+
+```yaml
+points:
+  D1a: [50, 0]
+  D1b: [150, 0]
+```
+
+A name appearing in both `outline:` (as an `id`) and `points:` is an error.
+The resolver merges both sources into a single point namespace before
+resolving any name reference. A name used anywhere that is not found in
+either source is an error.
 
 ---
 
 ## 3. Building outline (`outline:`)
 
-- A list of point names in perimeter order (clockwise).
+- A list of **inline point definitions** (see §2a) in perimeter order (clockwise).
 - The polygon **closes automatically**: the last point connects to the first.
   Do not repeat the first point at the end.
 - Area via the shoelace formula; cm² ÷ 10000 = m².
+
+### 3.1 Architectural grid axes
+
+When outline points carry `x_axis` / `y_axis` labels the SVG backend
+draws a dashed reference gridline for each distinct label:
+
+- `x_axis: "N"` → a vertical dashed line at that x coordinate, labelled
+  "N" in a circle bubble above the building.
+- `y_axis: "L"` → a horizontal dashed line at that y coordinate, labelled
+  "L" in a circle bubble to the left of the building.
+
+Gridlines are drawn behind all geometry (behind rooms and walls) so they
+never obscure the plan. A label declared on multiple outline points is
+accepted only if every occurrence has the same coordinate value.
 
 ---
 
@@ -52,7 +95,10 @@ The building's vertical extent becomes the Z axis.
 Each wall is a segment between two points (`from`, `to`) with attributes.
 
 - The `from`–`to` line is the wall **axis** (reference line).
-- `thickness` is the wall's thickness, in cm.
+- `thickness` is the wall's thickness, in cm. **Optional** — when omitted
+  the resolver fills in `building.exterior_wall_thickness` for
+  `load_bearing` walls and `building.partition_wall_thickness` for
+  `partition` walls.
 - `justify` (optional, default `"center"`): how `thickness` is distributed
   relative to the axis, perpendicular to the wall direction:
   - `"center"` — split half on each side (±thickness/2). Default.
@@ -151,7 +197,9 @@ So output is identical in ordering across tools:
 
 ## 10. Geometry validation
 
-1. Every name used in `outline`/`walls`/`openings`/`rooms` exists in `points:`.
+1. Every name used in `walls`/`openings`/`rooms` exists in the merged
+   point namespace (outline inline ids + `points:` entries). Outline
+   point ids must be unique; no id may appear in both sources.
 2. Building outline and every room have ≥ 3 points and form valid closed,
    non-self-intersecting polygons.
 3. Openings lie on a wall axis, within that wall's span.

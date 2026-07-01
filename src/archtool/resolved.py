@@ -34,11 +34,12 @@ class ResolvedWall:
 @dataclass(frozen=True)
 class ResolvedOpening:
     id: str
-    type: str  # "door" | "window"
+    type: str  # "door" | "window" | "garage_gate" | "empty_space"
     p_from: Point
     p_to: Point
     sill: float
     height: float
+    justify: str | None = None  # overrides the host wall's justify for the cut; None = inherit
 
 
 @dataclass(frozen=True)
@@ -72,6 +73,11 @@ class ResolvedModel:
     walls: tuple[ResolvedWall, ...]
     openings: tuple[ResolvedOpening, ...]
     rooms: tuple[ResolvedRoom, ...]
+    # Architectural grid axes declared in the outline.
+    # Each entry is (label, coordinate_value); sorted by coordinate value
+    # so SVG rendering draws them in spatial order.
+    x_axes: tuple[tuple[str, float], ...] = ()  # vertical gridlines: (label, x)
+    y_axes: tuple[tuple[str, float], ...] = ()  # horizontal gridlines: (label, y)
 
     def to_dict(self) -> dict:
         return asdict(self)
