@@ -27,27 +27,92 @@ building:
   format_version: "1.0"
   spec: "SPEC.md"
 
+# Outline defines the building perimeter inline.  Each point declares its
+# coordinates once and optionally names the architectural grid line it sits
+# on (x_axis = vertical gridline label, y_axis = horizontal gridline label).
+# The SVG backend draws dashed reference lines + bubble labels for every
+# distinct axis.  Interior junction points (wall T-intersections, opening
+# endpoints) that don't lie on the perimeter go in `points:` below.
+outline:
+  - id: n1C
+    x: 0
+    y: 200
+    x_axis: "1"
+    y_axis: "C"
+  - id: n2C
+    x: 240
+    y: 200
+    x_axis: "2"
+  - id: n2A
+    x: 240
+    y: 0
+    y_axis: "A"
+  - id: n3A
+    x: 645
+    y: 0
+    x_axis: "3"
+  - id: n3C
+    x: 645
+    y: 200
+  - id: n5C
+    x: 1240
+    y: 200
+    x_axis: "5"
+  - id: n5B
+    x: 1240
+    y: 100
+    y_axis: "B"
+  - id: n8B
+    x: 2718
+    y: 100
+    x_axis: "8"
+  - id: n8D
+    x: 2718
+    y: 494
+    y_axis: "D"
+  - id: n8aD
+    x: 2748
+    y: 494
+    x_axis: "8a"
+  - id: n8aG
+    x: 2748
+    y: 949
+    y_axis: "G"
+  - id: n7G
+    x: 2470
+    y: 949
+    x_axis: "7"
+  - id: n7H
+    x: 2470
+    y: 1110
+    y_axis: "H"
+  - id: n6H
+    x: 1850
+    y: 1110
+    x_axis: "6"
+  - id: n6F
+    x: 1850
+    y: 870
+    y_axis: "F"
+  - id: n4F
+    x: 975
+    y: 870
+    x_axis: "4"
+  - id: n4H
+    x: 975
+    y: 1110
+  - id: n3H
+    x: 645
+    y: 1110
+  - id: n3G
+    x: 645
+    y: 949
+  - id: n1G
+    x: 0
+    y: 949
+
+# Interior junction and opening-endpoint points (not on the perimeter).
 points:
-  n1C: [0, 200]
-  n2C: [240, 200]
-  n2A: [240, 0]
-  n3A: [645, 0]
-  n3C: [645, 200]
-  n5C: [1240, 200]
-  n5B: [1240, 100]
-  n8B: [2718, 100]
-  n8D: [2718, 494]
-  n8aD: [2748, 494]
-  n8aG: [2748, 949]
-  n7G: [2470, 949]
-  n7H: [2470, 1110]
-  n6H: [1850, 1110]
-  n6F: [1850, 870]
-  n4F: [975, 870]
-  n4H: [975, 1110]
-  n3H: [645, 1110]
-  n3G: [645, 949]
-  n1G: [0, 949]
   w3E: [645, 574]
   w4E: [975, 574]
   w5E: [1240, 574]
@@ -73,45 +138,37 @@ points:
   oG1: [100, 949]
   oG2: [380, 949]
 
-outline:
-  [n1C, n2C, n2A, n3A, n3C, n5C, n5B, n8B, n8D, n8aD, n8aG, n7G, n7H, n6H, n6F, n4F, n4H, n3H, n3G, n1G]
-
 walls:
   - id: "s_3"
     from: n3C
     to: n3G
-    thickness: 30
     type: "load_bearing"
+    # thickness omitted → defaults to exterior_wall_thickness (30 cm)
   - id: "s_4"
     from: w4E
     to: n4F
-    thickness: 30
     type: "load_bearing"
   - id: "s_6"
     from: w6E
     to: n6F
-    thickness: 30
     type: "load_bearing"
   - id: "s_6b"
     from: w6D1
     to: w6E1
-    thickness: 30
     type: "load_bearing"
   - id: "s_8D"
     from: w6D1
     to: n8D
-    thickness: 30
     type: "load_bearing"
   - id: "s_E"
     from: w3E
     to: w6E
-    thickness: 30
     type: "load_bearing"
   - id: "d_pgv"
     from: n2C
     to: d2C1
-    thickness: 15
     type: "partition"
+    # thickness omitted → defaults to partition_wall_thickness (15 cm)
     # The exterior wall above (30cm, axis x=240) and d_pgv (15cm) share
     # the same axis. Centered, their faces would be 7.5cm out of line on
     # both sides; "left" keeps d_pgv's full thickness on the utility-room
@@ -121,26 +178,23 @@ walls:
   - id: "d_pgh"
     from: d2C1
     to: d3C1
-    thickness: 15
     type: "partition"
   - id: "d_sph"
     from: d3E3
     to: d4E3
-    thickness: 15
     type: "partition"
   - id: "d_wtv"
     from: w5E
     to: d5E2
-    thickness: 15
     type: "partition"
-    justify: "left"
+    justify: "right"
 
 openings:
   - id: "D1"
     # 185cm is far wider than a real door leaf; modeled as an open
     # structural pass-through rather than forcing an oversized door swing.
     type: "empty_space"
-    from: oE1
+    from: w5E
     to: oE2
     sill: 0
     height: 200

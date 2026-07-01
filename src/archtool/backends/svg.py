@@ -24,6 +24,11 @@ GARAGE_GATE_COLOR = "#b8860b"
 ROOM_STROKE_COLOR = "#1a1a1a"
 ROOM_LABEL_COLOR = "#1a1a1a"
 OUTLINE_STROKE_COLOR = "#000000"
+AXIS_LINE_COLOR = "#b8b8b8"
+AXIS_LABEL_COLOR = "#606060"
+AXIS_DASH = "8 5"
+AXIS_BUBBLE_R = 18.0   # radius of the circle label, in cm
+AXIS_FONT_SIZE = 16
 
 
 def _offset_range(thickness: float, justify: str) -> tuple[float, float]:
@@ -216,7 +221,8 @@ def _garage_gate_symbol(opening: ResolvedOpening, thickness: float) -> str:
 def _render_opening(opening: ResolvedOpening, walls: tuple[ResolvedWall, ...], default_thickness: float) -> str:
     wall = find_wall_for_opening(opening, walls)
     thickness = wall.thickness if wall is not None else default_thickness
-    justify = wall.justify if wall is not None else "center"
+    wall_justify = wall.justify if wall is not None else "center"
+    justify = opening.justify if opening.justify is not None else wall_justify
     cut = _wall_rectangle(opening.p_from, opening.p_to, thickness, justify)
     if not cut:
         return ""
@@ -231,6 +237,55 @@ def _render_opening(opening: ResolvedOpening, walls: tuple[ResolvedWall, ...], d
     return "\n".join(parts)
 
 
+def _render_axes(model: ResolvedModel, min_x: float, min_y: float, max_x: float, max_y: float) -> list[str]:
+    """Dashed gridlines with circle-bubble labels for each declared axis.
+
+    X-axes (vertical lines) are labelled at the top margin.
+    Y-axes (horizontal lines) are labelled at the left margin.
+    Both are drawn *before* rooms and walls so they appear behind all geometry.
+    """
+    if not model.x_axes and not model.y_axes:
+        return []
+    parts: list[str] = []
+    bubble_offset = MARGIN_CM * 0.45  # how far into the margin the bubble centre sits
+
+    for _label, x_val in model.x_axes:
+        label = escape(_label)
+        parts.append(
+            f'<line x1="{x_val:.2f}" y1="{min_y:.2f}" x2="{x_val:.2f}" y2="{max_y:.2f}" '
+            f'stroke="{AXIS_LINE_COLOR}" stroke-width="0.8" stroke-dasharray="{AXIS_DASH}" />'
+        )
+        bubble_cy = min_y + bubble_offset
+        parts.append(
+            f'<circle cx="{x_val:.2f}" cy="{bubble_cy:.2f}" r="{AXIS_BUBBLE_R:.2f}" '
+            f'fill="white" stroke="{AXIS_LABEL_COLOR}" stroke-width="1.5" />'
+        )
+        parts.append(
+            f'<text x="{x_val:.2f}" y="{bubble_cy + AXIS_FONT_SIZE * 0.38:.2f}" '
+            f'fill="{AXIS_LABEL_COLOR}" font-size="{AXIS_FONT_SIZE}" '
+            f'text-anchor="middle">{label}</text>'
+        )
+
+    for _label, y_val in model.y_axes:
+        label = escape(_label)
+        parts.append(
+            f'<line x1="{min_x:.2f}" y1="{y_val:.2f}" x2="{max_x:.2f}" y2="{y_val:.2f}" '
+            f'stroke="{AXIS_LINE_COLOR}" stroke-width="0.8" stroke-dasharray="{AXIS_DASH}" />'
+        )
+        bubble_cx = min_x + bubble_offset
+        parts.append(
+            f'<circle cx="{bubble_cx:.2f}" cy="{y_val:.2f}" r="{AXIS_BUBBLE_R:.2f}" '
+            f'fill="white" stroke="{AXIS_LABEL_COLOR}" stroke-width="1.5" />'
+        )
+        parts.append(
+            f'<text x="{bubble_cx:.2f}" y="{y_val + AXIS_FONT_SIZE * 0.38:.2f}" '
+            f'fill="{AXIS_LABEL_COLOR}" font-size="{AXIS_FONT_SIZE}" '
+            f'text-anchor="middle">{label}</text>'
+        )
+
+    return parts
+
+
 def render_svg(model: ResolvedModel) -> str:
     xs = [x for x, _ in model.outline]
     ys = [y for _, y in model.outline]
@@ -242,9 +297,12 @@ def render_svg(model: ResolvedModel) -> str:
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{min_x:.2f} {min_y:.2f} {width:.2f} {height:.2f}" '
         f'font-family="sans-serif">',
         f'<rect x="{min_x:.2f}" y="{min_y:.2f}" width="{width:.2f}" height="{height:.2f}" fill="#ffffff" />',
-        f'<polygon points="{_points_attr(model.outline)}" fill="none" '
-        f'stroke="{OUTLINE_STROKE_COLOR}" stroke-width="1" />',
     ]
+    parts.extend(_render_axes(model, min_x, min_y, max_x, max_y))
+    parts.append(
+        f'<polygon points="{_points_attr(model.outline)}" fill="none" '
+        f'stroke="{OUTLINE_STROKE_COLOR}" stroke-width="1" />'
+    )
 
     for room in sorted(model.rooms, key=lambda r: r.id):
         parts.append(

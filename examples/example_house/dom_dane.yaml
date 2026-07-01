@@ -18,13 +18,28 @@ building:
   format_version: "1.0"
   spec: "SPEC.md"
 
+outline:
+  - id: P1
+    x: 240
+    y: 0
+  - id: P2
+    x: 1380
+    y: 0
+  - id: P3
+    x: 1380
+    y: 1135
+  - id: P4
+    x: 0
+    y: 1135
+  - id: P5
+    x: 0
+    y: 330
+  - id: P6
+    x: 240
+    y: 330
+
+# Interior junction and opening-endpoint points (not on the outline perimeter).
 points:
-  P1: [240, 0]
-  P2: [1380, 0]
-  P3: [1380, 1135]
-  P4: [0, 1135]
-  P5: [0, 330]
-  P6: [240, 330]
   P7: [560, 0]
   P8: [560, 1135]
   P9: [0, 560]
@@ -55,43 +70,36 @@ points:
   P34: [210, 1135]
   P35: [560, 330]
 
-outline: [P1, P2, P3, P4, P5, P6]
-
 walls:
   - id: "W1"
     from: P7
     to: P8
-    thickness: 15
+    thickness: 15    # load_bearing but thinner than exterior (30cm) → explicit
     type: "load_bearing"
   - id: "W2"
     from: P9
     to: P10
-    thickness: 15
     type: "partition"
+    # thickness omitted → defaults to partition_wall_thickness (15 cm)
   - id: "W3"
     from: P11
     to: P12
-    thickness: 15
     type: "partition"
   - id: "W4"
     from: P13
     to: P14
-    thickness: 15
     type: "partition"
   - id: "W5"
     from: P15
     to: P16
-    thickness: 15
     type: "partition"
   - id: "W6"
     from: P17
     to: P18
-    thickness: 15
     type: "partition"
   - id: "W7"
     from: P19
     to: P20
-    thickness: 15
     type: "partition"
 
 openings:

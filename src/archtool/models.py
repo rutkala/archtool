@@ -39,11 +39,36 @@ class Building(StrictModel):
     spec: str
 
 
+class OutlinePoint(StrictModel):
+    """A building-outline vertex defined inline with its coordinates.
+
+    The outline section is the single place to define perimeter points —
+    no separate `points:` entry is needed for them.  Non-perimeter
+    junction points (interior T-junctions, opening endpoints, etc.) that
+    do *not* lie on the outer perimeter are still defined in `points:`.
+
+    `x_axis` / `y_axis` are optional string labels that name the
+    architectural grid line this coordinate lies on (e.g. ``x_axis: "2"``
+    marks the vertical gridline at this x-value as grid line "2").
+    The SVG backend draws dashed reference lines and bubble labels for
+    every distinct axis declared in the outline.
+    """
+
+    id: str
+    x: float
+    y: float
+    x_axis: str | None = None  # names the vertical gridline at this x value
+    y_axis: str | None = None  # names the horizontal gridline at this y value
+
+
 class Wall(StrictModel):
     id: str
     from_: str = Field(alias="from")
     to: str
-    thickness: float
+    # thickness is optional; when omitted the resolver fills in the
+    # building default: exterior_wall_thickness for load_bearing walls,
+    # partition_wall_thickness for partition walls.
+    thickness: float | None = None
     type: WallType
     justify: WallJustify = "center"
 
@@ -55,6 +80,7 @@ class Opening(StrictModel):
     to: str
     sill: float
     height: float
+    justify: WallJustify | None = None
 
 
 class Room(StrictModel):
@@ -70,8 +96,14 @@ class BuildingFile(StrictModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
     building: Building
-    points: dict[str, tuple[float, float]]
-    outline: list[str]
+    # Outline is now a list of inline point definitions (OutlinePoint),
+    # NOT a list of point names.  Each entry defines both the coordinate
+    # and an optional architectural grid label for that position.
+    outline: list[OutlinePoint]
+    # Additional named points that do NOT appear on the building outline
+    # (interior T-junction points, opening endpoints, etc.).  Optional —
+    # omit entirely when all referenced points are already in `outline:`.
+    points: dict[str, tuple[float, float]] = Field(default_factory=dict)
     walls: list[Wall] = Field(default_factory=list)
     openings: list[Opening] = Field(default_factory=list)
     rooms: list[Room] = Field(default_factory=list)
