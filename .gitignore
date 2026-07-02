@@ -9,3 +9,6 @@ dist/
 
 # archtool build outputs (deterministic - regenerate with `archtool build`)
 .examples/
+
+# Claude Code local settings (session paths, local permissions)
+.claude/settings.local.json

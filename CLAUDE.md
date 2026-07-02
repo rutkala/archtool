@@ -20,26 +20,6 @@ the compiler against. Do not optimise for that specific house. Every feature mus
 generalise to *any* building expressed in the format. If a choice would only work
 for the example, it is wrong.
 
-## The full vision (the whole product)
-
-A pipeline of stages, each consuming the previous stage's output and emitting
-deliverables. One source of truth fans out into a complete construction-and-design
-package:
-
-1. **Shell (architecture)** — walls, rooms, openings → 2D floor plan, 3D shell model.
-2. **Construction detail** — wall/floor build-ups, dimensions, structural notes →
-   dimensioned technical drawings, sections, wall schedules.
-3. **Interior (design)** — furniture, fixtures, finishes per room → 2D interior
-   layouts, interior elevations, 3D furnished model, component/shopping list (BOM).
-4. **Presentation** — cameras, materials, lighting → high-quality 3D renders
-   (by orchestrating an external engine such as Blender, not by reimplementing it).
-5. **Compliance** — validation against formal building codes and design standards
-   (see "Formal rules" below).
-
-The final "full package" is simply *all targets built together*: technical
-drawings + 3D model + interior layouts + renders + the component list a builder
-can use.
-
 ## Current phase: v0.1 — build ONLY this
 
 - Parse + resolve `examples/`.
@@ -83,7 +63,7 @@ differ, that's a bug. This is the entire point of the tool.
 
 `SPEC.md` (repo root) is the authoritative, versioned contract for how the YAML
 is interpreted — coordinate system, wall axes, openings, materials→colours, and
-the formal-rules framework. Implement validation and backends to follow SPEC.md
+the formal-rules framework. Implement validation and backends to follow @SPEC.md
 exactly. If SPEC.md is ambiguous, ask rather than guess. The YAML declares which
 spec version it targets via `building.format_version`.
 
@@ -101,37 +81,11 @@ Run by `archtool validate`, two layers:
 A later layer (NOT in v0.1, but the framework should anticipate it):
 
 3. **Compliance** — validate against formal building codes / design standards
-   (see below). This produces warnings/errors like "bedroom below minimum area".
+   (see SPEC.md §11). This produces warnings/errors like "bedroom below minimum area".
 
 **Error messages must name the offending element and reason**, e.g.
 `Room 'kitchen': point 'P21' not found in points (did you mean 'P12'?)`.
 Good errors are a primary goal.
-
-## Formal rules (architecture & interior-design standards)
-
-A serious building compiler should check designs against codified rules, not just
-geometry. The architecture must support a **pluggable ruleset** system:
-
-- Rules are organised as named **rulesets** (e.g. `pl_wt` for Polish *Warunki
-  Techniczne*, or international/illustrative sets), selectable per project.
-- Each rule is a pure function over the resolved model producing pass / warning /
-  error with a message and a reference to the source clause.
-- Two kinds: **hard code requirements** (legal minimums) and **soft design
-  guidelines** (ergonomic best practice — clearances, circulation widths, kitchen
-  work-triangle, etc.).
-
-Concrete seed rules for the `pl_wt` ruleset (Polish Warunki Techniczne, to be
-implemented in a later phase — encode the *structure* now, the checks later):
-- Habitable room minimum height ≥ 250 cm; technical/circulation ≥ 220 cm.
-- Doors to habitable rooms/kitchen ≥ 80 cm wide, 200 cm high (in frame).
-- Entrance door to a dwelling ≥ 90 cm wide, 200 cm high.
-- A dwelling's usable area ≥ 25 m²; at least one room ≥ 16 m².
-- (Plot/placement rules such as min. distance to boundary belong to a later,
-  site-aware phase.)
-
-These numbers come from the Polish regulation (Rozporządzenie w sprawie warunków
-technicznych, jakim powinny odpowiadać budynki i ich usytuowanie). They are NOT
-v0.1 work — they document where the compliance layer is going.
 
 ## Tech choices
 
@@ -151,8 +105,3 @@ v0.1 work — they document where the compliance layer is going.
 - Write tests for the validator against the example fixture.
 - Prefer clear, boring, deterministic code over cleverness.
 - Everything in English — code, comments, docs, and YAML field names.
-
-## Files already present
-
-- `SPEC.md` — interpretation contract (authoritative, versioned, English).
-- `examples/` — the test fixture (English field names).
