@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100.00 -100.00 2948.00 1310.00" font-family="sans-serif">
+<rect x="-100.00" y="-100.00" width="2948.00" height="1310.00" fill="#ffffff" />
+<line x1="0.00" y1="-100.00" x2="0.00" y2="1210.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="0.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="0.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">1</text>
+<line x1="240.00" y1="-100.00" x2="240.00" y2="1210.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="240.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="240.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">2</text>
+<line x1="645.00" y1="-100.00" x2="645.00" y2="1210.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="645.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="645.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">3</text>
+<line x1="975.00" y1="-100.00" x2="975.00" y2="1210.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="975.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="975.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">4</text>
+<line x1="1240.00" y1="-100.00" x2="1240.00" y2="1210.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="1240.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="1240.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">5</text>
+<line x1="1850.00" y1="-100.00" x2="1850.00" y2="1210.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="1850.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="1850.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">6</text>
+<line x1="2470.00" y1="-100.00" x2="2470.00" y2="1210.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="2470.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="2470.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">7</text>
+<line x1="2718.00" y1="-100.00" x2="2718.00" y2="1210.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="2718.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="2718.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">8</text>
+<line x1="2748.00" y1="-100.00" x2="2748.00" y2="1210.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="2748.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="2748.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">9</text>
+<line x1="-100.00" y1="0.00" x2="2848.00" y2="0.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="0.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="6.08" fill="#606060" font-size="16" text-anchor="middle">A</text>
+<line x1="-100.00" y1="100.00" x2="2848.00" y2="100.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="100.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="106.08" fill="#606060" font-size="16" text-anchor="middle">B</text>
+<line x1="-100.00" y1="200.00" x2="2848.00" y2="200.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="200.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="206.08" fill="#606060" font-size="16" text-anchor="middle">C</text>
+<line x1="-100.00" y1="494.00" x2="2848.00" y2="494.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="494.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="500.08" fill="#606060" font-size="16" text-anchor="middle">D</text>
+<line x1="-100.00" y1="870.00" x2="2848.00" y2="870.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="870.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="876.08" fill="#606060" font-size="16" text-anchor="middle">E</text>
+<line x1="-100.00" y1="949.00" x2="2848.00" y2="949.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="949.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="955.08" fill="#606060" font-size="16" text-anchor="middle">F</text>
+<line x1="-100.00" y1="1110.00" x2="2848.00" y2="1110.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="1110.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="1116.08" fill="#606060" font-size="16" text-anchor="middle">G</text>
+<polygon points="0.00,200.00 240.00,200.00 240.00,0.00 645.00,0.00 645.00,200.00 1240.00,200.00 1240.00,100.00 2718.00,100.00 2718.00,494.00 2748.00,494.00 2748.00,949.00 2470.00,949.00 2470.00,1110.00 1850.00,1110.00 1850.00,870.00 975.00,870.00 975.00,1110.00 645.00,1110.00 645.00,949.00 0.00,949.00" fill="none" stroke="#000000" stroke-width="1" />
+<polygon points="0.00,200.00 240.00,200.00 240.00,268.00 645.00,268.00 645.00,949.00 0.00,949.00" fill="#9a9a93" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="240.00,0.00 645.00,0.00 645.00,268.00 240.00,268.00" fill="#d8d4cb" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="0.00,215.00 240.00,215.00 240.00,185.00 0.00,185.00" fill="#3a3a3a" />
+<polygon points="15.00,949.00 15.00,200.00 -15.00,200.00 -15.00,949.00" fill="#3a3a3a" />
+<polygon points="240.00,15.00 645.00,15.00 645.00,-15.00 240.00,-15.00" fill="#3a3a3a" />
+<polygon points="255.00,200.00 255.00,0.00 225.00,0.00 225.00,200.00" fill="#3a3a3a" />
+<polygon points="630.00,0.00 630.00,200.00 660.00,200.00 660.00,0.00" fill="#3a3a3a" />
+<polygon points="645.00,215.00 1240.00,215.00 1240.00,185.00 645.00,185.00" fill="#3a3a3a" />
+<polygon points="645.00,934.00 0.00,934.00 0.00,964.00 645.00,964.00" fill="#3a3a3a" />
+<polygon points="660.00,1110.00 660.00,949.00 630.00,949.00 630.00,1110.00" fill="#3a3a3a" />
+<polygon points="960.00,870.00 960.00,1110.00 990.00,1110.00 990.00,870.00" fill="#3a3a3a" />
+<polygon points="975.00,1095.00 645.00,1095.00 645.00,1125.00 975.00,1125.00" fill="#3a3a3a" />
+<polygon points="1240.00,115.00 2718.00,115.00 2718.00,85.00 1240.00,85.00" fill="#3a3a3a" />
+<polygon points="1255.00,200.00 1255.00,100.00 1225.00,100.00 1225.00,200.00" fill="#3a3a3a" />
+<polygon points="1850.00,855.00 975.00,855.00 975.00,885.00 1850.00,885.00" fill="#3a3a3a" />
+<polygon points="1865.00,1110.00 1865.00,870.00 1835.00,870.00 1835.00,1110.00" fill="#3a3a3a" />
+<polygon points="2455.00,949.00 2455.00,1110.00 2485.00,1110.00 2485.00,949.00" fill="#3a3a3a" />
+<polygon points="2470.00,1095.00 1850.00,1095.00 1850.00,1125.00 2470.00,1125.00" fill="#3a3a3a" />
+<polygon points="2703.00,100.00 2703.00,494.00 2733.00,494.00 2733.00,100.00" fill="#3a3a3a" />
+<polygon points="2718.00,509.00 2748.00,509.00 2748.00,479.00 2718.00,479.00" fill="#3a3a3a" />
+<polygon points="2733.00,494.00 2733.00,949.00 2763.00,949.00 2763.00,494.00" fill="#3a3a3a" />
+<polygon points="2748.00,934.00 2470.00,934.00 2470.00,964.00 2748.00,964.00" fill="#3a3a3a" />
+<polygon points="240.00,275.50 652.50,275.50 652.50,260.50 240.00,260.50" fill="#3a3a3a" />
+<polygon points="240.00,200.00 240.00,268.00 255.00,268.00 255.00,200.00" fill="#3a3a3a" />
+<polygon points="637.50,722.50 982.50,722.50 982.50,707.50 637.50,707.50" fill="#3a3a3a" />
+<polygon points="1225.00,566.50 1225.00,697.50 1240.00,697.50 1240.00,566.50" fill="#3a3a3a" />
+<polygon points="630.00,200.00 630.00,949.00 660.00,949.00 660.00,200.00" fill="#3a3a3a" />
+<polygon points="960.00,559.00 960.00,870.00 990.00,870.00 990.00,559.00" fill="#3a3a3a" />
+<polygon points="1835.00,574.00 1835.00,870.00 1865.00,870.00 1865.00,574.00" fill="#3a3a3a" />
+<polygon points="1965.00,494.00 1965.00,589.00 1995.00,589.00 1995.00,494.00" fill="#3a3a3a" />
+<polygon points="1980.00,509.00 2718.00,509.00 2718.00,479.00 1980.00,479.00" fill="#3a3a3a" />
+<polygon points="630.00,589.00 1850.00,589.00 1850.00,559.00 630.00,559.00" fill="#3a3a3a" />
+<rect x="-15.00" y="185.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="-15.00" y="934.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="225.00" y="-15.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="225.00" y="185.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="240.00" y="260.50" width="15.00" height="15.00" fill="#3a3a3a" />
+<rect x="630.00" y="-15.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="630.00" y="185.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="630.00" y="934.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="630.00" y="1095.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="960.00" y="855.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="960.00" y="1095.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="1225.00" y="85.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="1225.00" y="185.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="1835.00" y="559.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="1835.00" y="855.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="1835.00" y="1095.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="1965.00" y="479.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="2455.00" y="934.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="2455.00" y="1095.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="2703.00" y="85.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="2703.00" y="479.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="2733.00" y="479.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="2733.00" y="934.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<polygon points="1240.00,589.00 1440.00,589.00 1440.00,559.00 1240.00,559.00" fill="#ffffff" />
+<polygon points="280.00,15.00 370.00,15.00 370.00,-15.00 280.00,-15.00" fill="#ffffff" />
+<line x1="280.00" y1="0.00" x2="280.00" y2="90.00" stroke="#3a3a3a" stroke-width="2" />
+<path d="M 280.00 90.00 A 90.00 90.00 0 0 0 370.00 0.00" fill="none" stroke="#3a3a3a" stroke-width="1" stroke-dasharray="4 3" />
+<polygon points="100.00,964.00 380.00,964.00 380.00,934.00 100.00,934.00" fill="#ffffff" />
+<line x1="100.00" y1="949.00" x2="380.00" y2="949.00" stroke="#b8860b" stroke-width="4" />
+<line x1="100.00" y1="964.00" x2="100.00" y2="934.00" stroke="#b8860b" stroke-width="2" />
+<line x1="380.00" y1="964.00" x2="380.00" y2="934.00" stroke="#b8860b" stroke-width="2" />
+<polygon points="225.00,60.00 225.00,150.00 255.00,150.00 255.00,60.00" fill="#ffffff" />
+<line x1="247.50" y1="60.00" x2="247.50" y2="150.00" stroke="#3a8fd6" stroke-width="2" />
+<line x1="232.50" y1="60.00" x2="232.50" y2="150.00" stroke="#3a8fd6" stroke-width="2" />
+<text x="315.25" y="595.08" fill="#1a1a1a" font-size="18" text-anchor="middle">Garage</text>
+<text x="315.25" y="617.08" fill="#1a1a1a" font-size="14" text-anchor="middle">45.6 m²</text>
+<text x="442.50" y="134.00" fill="#1a1a1a" font-size="18" text-anchor="middle">Utility room</text>
+<text x="442.50" y="156.00" fill="#1a1a1a" font-size="14" text-anchor="middle">10.9 m²</text>
+</svg>

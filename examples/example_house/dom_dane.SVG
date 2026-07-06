@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100.00 -100.00 1580.00 1335.00" font-family="sans-serif">
+<rect x="-100.00" y="-100.00" width="1580.00" height="1335.00" fill="#ffffff" />
+<line x1="0.00" y1="-100.00" x2="0.00" y2="1235.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="0.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="0.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">1</text>
+<line x1="240.00" y1="-100.00" x2="240.00" y2="1235.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="240.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="240.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">2</text>
+<line x1="1380.00" y1="-100.00" x2="1380.00" y2="1235.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="1380.00" cy="-55.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="1380.00" y="-48.92" fill="#606060" font-size="16" text-anchor="middle">3</text>
+<line x1="-100.00" y1="0.00" x2="1480.00" y2="0.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="0.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="6.08" fill="#606060" font-size="16" text-anchor="middle">A</text>
+<line x1="-100.00" y1="330.00" x2="1480.00" y2="330.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="330.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="336.08" fill="#606060" font-size="16" text-anchor="middle">B</text>
+<line x1="-100.00" y1="1135.00" x2="1480.00" y2="1135.00" stroke="#b8b8b8" stroke-width="0.8" stroke-dasharray="8 5" />
+<circle cx="-55.00" cy="1135.00" r="18.00" fill="white" stroke="#606060" stroke-width="1.5" />
+<text x="-55.00" y="1141.08" fill="#606060" font-size="16" text-anchor="middle">C</text>
+<polygon points="240.00,0.00 1380.00,0.00 1380.00,1135.00 0.00,1135.00 0.00,330.00 240.00,330.00" fill="none" stroke="#000000" stroke-width="1" />
+<polygon points="1050.00,0.00 1380.00,0.00 1380.00,400.00 1050.00,400.00" fill="#d9bd95" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="280.00,850.00 560.00,850.00 560.00,1135.00 280.00,1135.00" fill="#d9bd95" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="240.00,330.00 560.00,330.00 560.00,560.00 0.00,560.00 0.00,330.00" fill="#d8d4cb" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="0.00,560.00 280.00,560.00 280.00,820.00 0.00,820.00" fill="#d8d4cb" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="560.00,400.00 1380.00,400.00 1380.00,1135.00 560.00,1135.00" fill="#d9bd95" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="280.00,560.00 560.00,560.00 560.00,850.00 280.00,850.00" fill="#d9bd95" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="0.00,820.00 280.00,820.00 280.00,1135.00 0.00,1135.00" fill="#d9bd95" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="560.00,0.00 1050.00,0.00 1050.00,400.00 560.00,400.00" fill="#d9bd95" stroke="#1a1a1a" stroke-width="1" />
+<polygon points="240.00,15.00 1380.00,15.00 1380.00,-15.00 240.00,-15.00" fill="#3a3a3a" />
+<polygon points="1365.00,0.00 1365.00,1135.00 1395.00,1135.00 1395.00,0.00" fill="#3a3a3a" />
+<polygon points="1380.00,1120.00 0.00,1120.00 0.00,1150.00 1380.00,1150.00" fill="#3a3a3a" />
+<polygon points="15.00,1135.00 15.00,330.00 -15.00,330.00 -15.00,1135.00" fill="#3a3a3a" />
+<polygon points="0.00,345.00 240.00,345.00 240.00,315.00 0.00,315.00" fill="#3a3a3a" />
+<polygon points="255.00,330.00 255.00,0.00 225.00,0.00 225.00,330.00" fill="#3a3a3a" />
+<polygon points="552.50,-7.50 552.50,1142.50 567.50,1142.50 567.50,-7.50" fill="#3a3a3a" />
+<polygon points="-7.50,567.50 567.50,567.50 567.50,552.50 -7.50,552.50" fill="#3a3a3a" />
+<polygon points="552.50,407.50 1387.50,407.50 1387.50,392.50 552.50,392.50" fill="#3a3a3a" />
+<polygon points="1042.50,-7.50 1042.50,407.50 1057.50,407.50 1057.50,-7.50" fill="#3a3a3a" />
+<polygon points="272.50,552.50 272.50,1142.50 287.50,1142.50 287.50,552.50" fill="#3a3a3a" />
+<polygon points="-7.50,827.50 287.50,827.50 287.50,812.50 -7.50,812.50" fill="#3a3a3a" />
+<polygon points="272.50,857.50 567.50,857.50 567.50,842.50 272.50,842.50" fill="#3a3a3a" />
+<rect x="-15.00" y="315.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="-15.00" y="1120.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="225.00" y="-15.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="225.00" y="315.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="1365.00" y="-15.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<rect x="1365.00" y="1120.00" width="30.00" height="30.00" fill="#3a3a3a" />
+<polygon points="110.00,345.00 210.00,345.00 210.00,315.00 110.00,315.00" fill="#ffffff" />
+<line x1="110.00" y1="330.00" x2="110.00" y2="430.00" stroke="#3a3a3a" stroke-width="2" />
+<path d="M 110.00 430.00 A 100.00 100.00 0 0 0 210.00 330.00" fill="none" stroke="#3a3a3a" stroke-width="1" stroke-dasharray="4 3" />
+<polygon points="1150.00,15.00 1300.00,15.00 1300.00,-15.00 1150.00,-15.00" fill="#ffffff" />
+<line x1="1150.00" y1="-7.50" x2="1300.00" y2="-7.50" stroke="#3a8fd6" stroke-width="2" />
+<line x1="1150.00" y1="7.50" x2="1300.00" y2="7.50" stroke="#3a8fd6" stroke-width="2" />
+<polygon points="850.00,1150.00 1150.00,1150.00 1150.00,1120.00 850.00,1120.00" fill="#ffffff" />
+<line x1="850.00" y1="1127.50" x2="1150.00" y2="1127.50" stroke="#3a8fd6" stroke-width="2" />
+<line x1="850.00" y1="1142.50" x2="1150.00" y2="1142.50" stroke="#3a8fd6" stroke-width="2" />
+<polygon points="1365.00,650.00 1365.00,950.00 1395.00,950.00 1395.00,650.00" fill="#ffffff" />
+<line x1="1387.50" y1="650.00" x2="1387.50" y2="950.00" stroke="#3a8fd6" stroke-width="2" />
+<line x1="1372.50" y1="650.00" x2="1372.50" y2="950.00" stroke="#3a8fd6" stroke-width="2" />
+<polygon points="1365.00,150.00 1365.00,300.00 1395.00,300.00 1395.00,150.00" fill="#ffffff" />
+<line x1="1387.50" y1="150.00" x2="1387.50" y2="300.00" stroke="#3a8fd6" stroke-width="2" />
+<line x1="1372.50" y1="150.00" x2="1372.50" y2="300.00" stroke="#3a8fd6" stroke-width="2" />
+<polygon points="60.00,1150.00 210.00,1150.00 210.00,1120.00 60.00,1120.00" fill="#ffffff" />
+<line x1="60.00" y1="1127.50" x2="210.00" y2="1127.50" stroke="#3a8fd6" stroke-width="2" />
+<line x1="60.00" y1="1142.50" x2="210.00" y2="1142.50" stroke="#3a8fd6" stroke-width="2" />
+<polygon points="650.00,15.00 950.00,15.00 950.00,-15.00 650.00,-15.00" fill="#ffffff" />
+<line x1="650.00" y1="-7.50" x2="950.00" y2="-7.50" stroke="#3a8fd6" stroke-width="2" />
+<line x1="650.00" y1="7.50" x2="950.00" y2="7.50" stroke="#3a8fd6" stroke-width="2" />
+<text x="1215.00" y="200.00" fill="#1a1a1a" font-size="18" text-anchor="middle">Study</text>
+<text x="1215.00" y="222.00" fill="#1a1a1a" font-size="14" text-anchor="middle">13.2 m²</text>
+<text x="420.00" y="992.50" fill="#1a1a1a" font-size="18" text-anchor="middle">Wardrobe</text>
+<text x="420.00" y="1014.50" fill="#1a1a1a" font-size="14" text-anchor="middle">8.0 m²</text>
+<text x="280.00" y="445.00" fill="#1a1a1a" font-size="18" text-anchor="middle">Entrance hall</text>
+<text x="280.00" y="467.00" fill="#1a1a1a" font-size="14" text-anchor="middle">12.9 m²</text>
+<text x="140.00" y="690.00" fill="#1a1a1a" font-size="18" text-anchor="middle">Bathroom</text>
+<text x="140.00" y="712.00" fill="#1a1a1a" font-size="14" text-anchor="middle">7.3 m²</text>
+<text x="970.00" y="767.50" fill="#1a1a1a" font-size="18" text-anchor="middle">Living + kitchen</text>
+<text x="970.00" y="789.50" fill="#1a1a1a" font-size="14" text-anchor="middle">60.3 m²</text>
+<text x="420.00" y="705.00" fill="#1a1a1a" font-size="18" text-anchor="middle">Kids bedroom</text>
+<text x="420.00" y="727.00" fill="#1a1a1a" font-size="14" text-anchor="middle">8.1 m²</text>
+<text x="140.00" y="977.50" fill="#1a1a1a" font-size="18" text-anchor="middle">Kids bedroom</text>
+<text x="140.00" y="999.50" fill="#1a1a1a" font-size="14" text-anchor="middle">8.8 m²</text>
+<text x="805.00" y="200.00" fill="#1a1a1a" font-size="18" text-anchor="middle">Master bedroom</text>
+<text x="805.00" y="222.00" fill="#1a1a1a" font-size="14" text-anchor="middle">19.6 m²</text>
+</svg>
