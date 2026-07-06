@@ -24,27 +24,19 @@ building:
   format_version: "1.0"
   spec: "SPEC.md"
 
-# outline defines the building perimeter.  Each entry is a named point
-# with its x/y coordinates (in cm; x right, y down).  Optional x_axis /
-# y_axis labels name the architectural grid lines and are drawn as dashed
-# reference lines in the SVG.
+# outline defines the building perimeter as a list of [x, y] coordinate
+# pairs (in cm; x right, y down), in perimeter order.  The tool auto-labels
+# distinct x-values as vertical gridlines "1","2",... and distinct y-values
+# as horizontal gridlines "A","B",..., drawn as dashed reference lines in
+# the SVG, and derives each point's id from them: o<x_label><y_label>.
+# Here that gives P1->o1A, P2->o2A, P3->o2B, P4->o1B - refer to them by
+# those ids elsewhere in this file.  A point may still be given explicit
+# `id` / `x_axis` / `y_axis` (object form) to override the automatic ones.
 outline:
-  - id: P1
-    x: 0
-    y: 0
-    x_axis: "1"
-    y_axis: "A"
-  - id: P2
-    x: 400
-    y: 0
-    x_axis: "2"
-  - id: P3
-    x: 400
-    y: 300
-    y_axis: "B"
-  - id: P4
-    x: 0
-    y: 300
+  - [0, 0]      # o1A
+  - [400, 0]    # o2A
+  - [400, 300]  # o2B
+  - [0, 300]    # o1B
 
 # Additional named points not on the outline (interior T-junctions,
 # opening endpoints, etc.).  Omit if all referenced points are in outline.
@@ -59,8 +51,8 @@ points:
 walls: []
 # Add interior walls like:
 #   - id: "W1"
-#     from: P1
-#     to: P2
+#     from: o1A
+#     to: o2A
 #     type: "partition"   # or "load_bearing"
 #     # thickness is optional; defaults to partition_wall_thickness or
 #     # exterior_wall_thickness from the building block above.
@@ -98,10 +90,12 @@ archtool build dom_dane.yaml --watch   # re-render on every save
 ## Editing the building
 
 - `building:` — overall properties (ceiling height, wall thicknesses, ...).
-- `outline:` — the building's exterior perimeter as a list of named
-  points defined inline with their coordinates (cm; x right, y down).
-  Closes automatically (don't repeat the first point).  Add optional
-  `x_axis` / `y_axis` labels to draw architectural grid reference lines.
+- `outline:` — the building's exterior perimeter as a list of `[x, y]`
+  coordinate pairs (cm; x right, y down).  Closes automatically (don't
+  repeat the first point).  Point ids and grid-axis labels ("1","2",...
+  and "A","B",...) are derived automatically from the coordinates
+  (`o<x_label><y_label>`); give a point explicit `id` / `x_axis` /
+  `y_axis` (object form) only to override the automatic ones.
 - `points:` — additional named coordinates that don't appear on the
   outline (interior junction points, opening endpoints, etc.).
 - `walls:` — interior walls: a `from`/`to` point pair, `type`

@@ -35,19 +35,44 @@ Points can be defined in two places:
 ### 2a. Inline in `outline:` (perimeter points)
 
 Perimeter corners are defined directly inside the `outline:` list — no
-separate `points:` entry is needed for them. Each entry is:
+separate `points:` entry is needed for them. The minimal form is a bare
+`[x, y]` coordinate pair:
 
 ```yaml
-- id: P1        # unique name referenced everywhere else
-  x: 0          # x coordinate in cm
-  y: 0          # y coordinate in cm
-  x_axis: "1"   # optional: names the vertical gridline at this x value
-  y_axis: "A"   # optional: names the horizontal gridline at this y value
+outline:
+  - [0, 0]
+  - [400, 0]
+  - [400, 300]
+  - [0, 300]
 ```
 
-`x_axis` and `y_axis` are **optional**. When present they label the
-architectural reference grid (see §2b). The same label must not appear at
-two different coordinate values — that is an error.
+From coordinates alone the resolver derives, for every outline point:
+
+1. **Axis labels.** Every distinct x-value across the outline becomes a
+   vertical gridline, auto-numbered `"1"`, `"2"`, `"3"`, ... in ascending
+   x order. Every distinct y-value becomes a horizontal gridline,
+   auto-lettered `"A"`, `"B"`, `"C"`, ..., `"Z"`, `"AA"`, `"AB"`, ... in
+   ascending y order.
+2. **Point id.** `o<x_label><y_label>` — e.g. the corner at `(400, 0)`
+   above becomes `o2A`. Reference outline points by this id in `walls:`,
+   `openings:`, and `rooms:`, the same as any other named point.
+
+The object form is still available to **override** the automatic id
+and/or axis labels for a specific point:
+
+```yaml
+- id: P1        # explicit id instead of the auto-derived one
+  x: 0          # x coordinate in cm
+  y: 0          # y coordinate in cm
+  x_axis: "1"   # explicit label instead of the auto-assigned one
+  y_axis: "A"
+```
+
+Any field left out (`id`, `x_axis`, `y_axis`) is auto-derived as above.
+An explicit `x_axis`/`y_axis` reserves that label — auto-numbering skips
+labels already taken by an override. The same label must not appear at
+two different coordinate values — that is an error, whether the label was
+assigned automatically or explicitly.
 
 ### 2b. In `points:` (non-perimeter points)
 
@@ -76,13 +101,15 @@ either source is an error.
 
 ### 3.1 Architectural grid axes
 
-When outline points carry `x_axis` / `y_axis` labels the SVG backend
-draws a dashed reference gridline for each distinct label:
+Every distinct x/y value on the outline has a label (auto-assigned or
+explicit, see §2a), and the SVG backend draws a dashed reference gridline
+for each one:
 
-- `x_axis: "N"` → a vertical dashed line at that x coordinate, labelled
-  "N" in a circle bubble above the building.
-- `y_axis: "L"` → a horizontal dashed line at that y coordinate, labelled
-  "L" in a circle bubble to the left of the building.
+- Each distinct x value → a vertical dashed line at that x coordinate,
+  labelled with its x-axis label in a circle bubble above the building.
+- Each distinct y value → a horizontal dashed line at that y coordinate,
+  labelled with its y-axis label in a circle bubble to the left of the
+  building.
 
 Gridlines are drawn behind all geometry (behind rooms and walls) so they
 never obscure the plan. A label declared on multiple outline points is

@@ -170,13 +170,13 @@ def test_wall_joint_patch_for_mismatched_justify_does_not_overreach() -> None:
 
 def test_gruszowa_d_pgv_is_flush_with_exterior_wall(gruszowa_fixture_path) -> None:
     # d_pgv (15cm, justify="left") continues the 30cm exterior wall below
-    # n2C=(240,200), sharing that exact point rather than a duplicated one.
+    # o2C=(240,200), sharing that exact point rather than a duplicated one.
     # Centering both on the same axis would leave their faces 7.5cm apart
     # on both sides; "left" justification keeps d_pgv's utility-room-facing
     # face flush with the exterior wall's face, without moving any points.
     model, _ = load_and_validate(gruszowa_fixture_path)
 
-    exterior = next(w for w in model.exterior_walls if w.id == "EXT_n2C_n2A")
+    exterior = next(w for w in model.exterior_walls if w.id == "EXT_o2C_o2A")
     d_pgv = next(w for w in model.walls if w.id == "d_pgv")
 
     assert d_pgv.p_from == exterior.p_from == (240.0, 200.0)  # same point, not a duplicate

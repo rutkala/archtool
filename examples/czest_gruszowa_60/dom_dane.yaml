@@ -27,89 +27,37 @@ building:
   format_version: "1.0"
   spec: "SPEC.md"
 
-# Outline defines the building perimeter inline.  Each point declares its
-# coordinates once and optionally names the architectural grid line it sits
-# on (x_axis = vertical gridline label, y_axis = horizontal gridline label).
-# The SVG backend draws dashed reference lines + bubble labels for every
-# distinct axis.  Interior junction points (wall T-intersections, opening
-# endpoints) that don't lie on the perimeter go in `points:` below.
+# Outline defines the building perimeter as a bare list of [x, y]
+# coordinate pairs, in perimeter order.  The tool auto-labels the distinct
+# x-values as vertical gridlines "1","2","3",... and the distinct y-values
+# as horizontal gridlines "A","B","C",... (sorted ascending), then derives
+# each point's id from those labels: o<x_label><y_label>.  The SVG backend
+# draws dashed reference lines + bubble labels for every axis.  A point can
+# still be given explicit `id` / `x_axis` / `y_axis` (object form) to
+# override the automatic ones; this fixture uses the fully automatic form.
+# Interior junction points (wall T-intersections, opening endpoints) that
+# don't lie on the perimeter go in `points:` below.
 outline:
-  - id: n1C
-    x: 0
-    y: 200
-    x_axis: "1"
-    y_axis: "C"
-  - id: n2C
-    x: 240
-    y: 200
-    x_axis: "2"
-  - id: n2A
-    x: 240
-    y: 0
-    y_axis: "A"
-  - id: n3A
-    x: 645
-    y: 0
-    x_axis: "3"
-  - id: n3C
-    x: 645
-    y: 200
-  - id: n5C
-    x: 1240
-    y: 200
-    x_axis: "5"
-  - id: n5B
-    x: 1240
-    y: 100
-    y_axis: "B"
-  - id: n8B
-    x: 2718
-    y: 100
-    x_axis: "8"
-  - id: n8D
-    x: 2718
-    y: 494
-    y_axis: "D"
-  - id: n8aD
-    x: 2748
-    y: 494
-    x_axis: "8a"
-  - id: n8aG
-    x: 2748
-    y: 949
-    y_axis: "G"
-  - id: n7G
-    x: 2470
-    y: 949
-    x_axis: "7"
-  - id: n7H
-    x: 2470
-    y: 1110
-    y_axis: "H"
-  - id: n6H
-    x: 1850
-    y: 1110
-    x_axis: "6"
-  - id: n6F
-    x: 1850
-    y: 870
-    y_axis: "F"
-  - id: n4F
-    x: 975
-    y: 870
-    x_axis: "4"
-  - id: n4H
-    x: 975
-    y: 1110
-  - id: n3H
-    x: 645
-    y: 1110
-  - id: n3G
-    x: 645
-    y: 949
-  - id: n1G
-    x: 0
-    y: 949
+  - [0, 200]      # o1C
+  - [240, 200]    # o2C
+  - [240, 0]      # o2A
+  - [645, 0]      # o3A
+  - [645, 200]    # o3C
+  - [1240, 200]   # o5C
+  - [1240, 100]   # o5B
+  - [2718, 100]   # o8B
+  - [2718, 494]   # o8D
+  - [2748, 494]   # o9D
+  - [2748, 949]   # o9F
+  - [2470, 949]   # o7F
+  - [2470, 1110]  # o7G
+  - [1850, 1110]  # o6G
+  - [1850, 870]   # o6E
+  - [975, 870]    # o4E
+  - [975, 1110]   # o4G
+  - [645, 1110]   # o3G
+  - [645, 949]    # o3F
+  - [0, 949]      # o1F
 
 # Interior junction and opening-endpoint points (not on the perimeter).
 points:
@@ -128,29 +76,29 @@ points:
   d51E2: [1455, 690]
   oE1: [1255, 574]
   oE2: [1440, 574]
-  # Utility room's own back door (north exterior wall, n2A-n3A).
+  # Utility room's own back door (north exterior wall, o2A-o3A).
   oUD1: [280, 0]
   oUD2: [370, 0]
-  # Utility room window (west exterior wall, n2C-n2A).
+  # Utility room window (west exterior wall, o2C-o2A).
   oUW1: [240, 60]
   oUW2: [240, 150]
-  # Garage vehicle door (south exterior wall, n3G-n1G).
+  # Garage vehicle door (south exterior wall, o3F-o1F).
   oG1: [100, 949]
   oG2: [380, 949]
 
 walls:
   - id: "s_3"
-    from: n3C
-    to: n3G
+    from: o3C
+    to: o3F
     type: "load_bearing"
     # thickness omitted → defaults to exterior_wall_thickness (30 cm)
   - id: "s_4"
     from: w4E
-    to: n4F
+    to: o4E
     type: "load_bearing"
   - id: "s_6"
     from: w6E
-    to: n6F
+    to: o6E
     type: "load_bearing"
   - id: "s_6b"
     from: w6D1
@@ -158,14 +106,14 @@ walls:
     type: "load_bearing"
   - id: "s_8D"
     from: w6D1
-    to: n8D
+    to: o8D
     type: "load_bearing"
   - id: "s_E"
     from: w3E
     to: w6E
     type: "load_bearing"
   - id: "d_pgv"
-    from: n2C
+    from: o2C
     to: d2C1
     type: "partition"
     # thickness omitted → defaults to partition_wall_thickness (15 cm)
@@ -173,7 +121,7 @@ walls:
     # the same axis. Centered, their faces would be 7.5cm out of line on
     # both sides; "left" keeps d_pgv's full thickness on the utility-room
     # side (toward larger x), flush with the exterior wall's face there,
-    # while still sharing the exact same connection point n2C.
+    # while still sharing the exact same connection point o2C.
     justify: "left"
   - id: "d_pgh"
     from: d2C1
@@ -221,8 +169,8 @@ rooms:
   - id: "garaz"
     name: "Garage"
     floor: "concrete"
-    outline: [n1C, n2C, d2C1, d3C1, n3G, n1G]
+    outline: [o1C, o2C, d2C1, d3C1, o3F, o1F]
   - id: "pom_gosp"
     name: "Utility room"
     floor: "tiles"
-    outline: [n2A, n3A, d3C1, d2C1]
+    outline: [o2A, o3A, d3C1, d2C1]

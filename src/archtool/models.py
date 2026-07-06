@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 WallType = Literal["load_bearing", "partition"]
 WallJustify = Literal["left", "center", "right"]
@@ -47,18 +47,28 @@ class OutlinePoint(StrictModel):
     junction points (interior T-junctions, opening endpoints, etc.) that
     do *not* lie on the outer perimeter are still defined in `points:`.
 
-    `x_axis` / `y_axis` are optional string labels that name the
-    architectural grid line this coordinate lies on (e.g. ``x_axis: "2"``
-    marks the vertical gridline at this x-value as grid line "2").
-    The SVG backend draws dashed reference lines and bubble labels for
-    every distinct axis declared in the outline.
+    Minimal form is a plain ``[x, y]`` pair; the resolver then auto-labels
+    the x/y architectural grid axes (1,2,3,... and A,B,C,...) and derives
+    this point's id from them (``o<x_label><y_label>``). ``id``, `x_axis`,
+    and `y_axis` may still be set explicitly to override the automatic
+    values — e.g. ``x_axis: "2"`` marks the vertical gridline at this
+    x-value as grid line "2". The SVG backend draws dashed reference
+    lines and bubble labels for every distinct axis.
     """
 
-    id: str
+    id: str | None = None  # auto-derived from axis labels when omitted
     x: float
     y: float
     x_axis: str | None = None  # names the vertical gridline at this x value
     y_axis: str | None = None  # names the horizontal gridline at this y value
+
+    @model_validator(mode="before")
+    @classmethod
+    def _coerce_shorthand(cls, value: object) -> object:
+        """Accept the minimal ``[x, y]`` list form in addition to a mapping."""
+        if isinstance(value, (list, tuple)) and len(value) == 2:
+            return {"x": value[0], "y": value[1]}
+        return value
 
 
 class Wall(StrictModel):

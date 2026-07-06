@@ -8,13 +8,15 @@ downstream works in plain coordinates.
 from __future__ import annotations
 
 import difflib
+import itertools
+import string
 from pathlib import Path
 
 import yaml
 from pydantic import ValidationError as PydanticValidationError
 
 from .errors import ArchtoolValidationError, Diagnostic
-from .models import BuildingFile
+from .models import BuildingFile, OutlinePoint
 from .resolved import (
     FLOOR_COLORS,
     Point,
@@ -60,6 +62,13 @@ def _suggest(name: str, candidates: list[str]) -> str:
     return f" (did you mean '{matches[0]}'?)" if matches else ""
 
 
+def _alpha_seq():
+    """Yield A, B, ..., Z, AA, AB, ..., for auto y-axis labels."""
+    for length in itertools.count(1):
+        for combo in itertools.product(string.ascii_uppercase, repeat=length):
+            yield "".join(combo)
+
+
 class _Resolver:
     """Resolves point names to coordinates, collecting diagnostics as it goes.
 
@@ -70,8 +79,74 @@ class _Resolver:
     def __init__(self, bf: BuildingFile) -> None:
         self.bf = bf
         self.diagnostics: list[Diagnostic] = []
+        # Axis labels are computed once, before points, so both the merged
+        # points dict (auto point ids) and the SVG gridlines (_extract_axes)
+        # agree on the same label for a given coordinate value.
+        self._x_labels, self._y_labels = self._auto_label_axes()
         # Build the merged points dict once: outline inline defs + explicit points:.
         self.points = self._build_points_dict()
+
+    def _auto_label_axes(self) -> tuple[dict[float, str], dict[float, str]]:
+        """Assign a grid label to every distinct x and y value on the outline.
+
+        Explicit `x_axis` / `y_axis` overrides on outline points are kept as
+        given (conflicting values for the same label is an error). Every
+        remaining, unlabeled coordinate value is auto-assigned the next
+        unused label from the "1,2,3,..." / "A,B,C,...,Z,AA,..." sequences.
+        """
+        x_values: dict[float, str | None] = {}
+        y_values: dict[float, str | None] = {}
+        for op in self.bf.outline:
+            x_values.setdefault(op.x, None)
+            y_values.setdefault(op.y, None)
+            if op.x_axis is not None:
+                existing = x_values[op.x]
+                if existing is not None and existing != op.x_axis:
+                    self.diagnostics.append(
+                        Diagnostic(
+                            "error",
+                            f"Outline point '{op.id or (op.x, op.y)}'",
+                            f"x_axis '{op.x_axis}' conflicts with '{existing}' already assigned to x={op.x}",
+                        )
+                    )
+                else:
+                    x_values[op.x] = op.x_axis
+            if op.y_axis is not None:
+                existing = y_values[op.y]
+                if existing is not None and existing != op.y_axis:
+                    self.diagnostics.append(
+                        Diagnostic(
+                            "error",
+                            f"Outline point '{op.id or (op.x, op.y)}'",
+                            f"y_axis '{op.y_axis}' conflicts with '{existing}' already assigned to y={op.y}",
+                        )
+                    )
+                else:
+                    y_values[op.y] = op.y_axis
+
+        used_x_labels = {label for label in x_values.values() if label is not None}
+        used_y_labels = {label for label in y_values.values() if label is not None}
+
+        numbers = (str(n) for n in itertools.count(1) if str(n) not in used_x_labels)
+        for x in sorted(x_values):
+            if x_values[x] is None:
+                x_values[x] = next(numbers)
+
+        letters = (letter for letter in _alpha_seq() if letter not in used_y_labels)
+        for y in sorted(y_values):
+            if y_values[y] is None:
+                y_values[y] = next(letters)
+
+        return (
+            {x: label for x, label in x_values.items() if label is not None},
+            {y: label for y, label in y_values.items() if label is not None},
+        )
+
+    def _outline_point_id(self, op: OutlinePoint) -> str:
+        """The point id for an outline entry: explicit `id`, or derived from
+        its (auto- or manually-labeled) x/y axis labels: `o<x_label><y_label>`.
+        """
+        return op.id if op.id is not None else f"o{self._x_labels[op.x]}{self._y_labels[op.y]}"
 
     def _build_points_dict(self) -> dict[str, Point]:
         """Merge inline outline point definitions with the explicit points: dict.
@@ -81,12 +156,13 @@ class _Resolver:
         """
         points: dict[str, Point] = {}
         for op in self.bf.outline:
-            if op.id in points:
+            point_id = self._outline_point_id(op)
+            if point_id in points:
                 self.diagnostics.append(
-                    Diagnostic("error", f"Outline point '{op.id}'", "duplicate point id in outline")
+                    Diagnostic("error", f"Outline point '{point_id}'", "duplicate point id in outline")
                 )
             else:
-                points[op.id] = (op.x, op.y)
+                points[point_id] = (op.x, op.y)
         for name, coord in self.bf.points.items():
             if name in points:
                 self.diagnostics.append(
@@ -124,44 +200,15 @@ class _Resolver:
         return coords if ok else None
 
     def _extract_axes(self) -> tuple[tuple[tuple[str, float], ...], tuple[tuple[str, float], ...]]:
-        """Collect x_axis / y_axis labels declared on outline points.
+        """Return the (label, value) pairs for every x/y axis, for SVG gridlines.
 
-        Each label maps to one coordinate value; if the same label appears
-        at two different values that is a validation error.  Returns two
-        tuples of (label, value) pairs sorted by coordinate value so that
-        SVG rendering draws gridlines in spatial left-to-right /
-        top-to-bottom order.
+        Labels were already computed (and validated) by `_auto_label_axes`
+        in `__init__`; this just reformats them sorted by coordinate value
+        so gridlines render in spatial left-to-right / top-to-bottom order.
         """
-        x_axes: dict[str, float] = {}
-        y_axes: dict[str, float] = {}
-        for op in self.bf.outline:
-            if op.x_axis is not None:
-                if op.x_axis in x_axes and x_axes[op.x_axis] != op.x:
-                    self.diagnostics.append(
-                        Diagnostic(
-                            "error",
-                            f"Outline point '{op.id}'",
-                            f"x_axis '{op.x_axis}' was already assigned to x={x_axes[op.x_axis]}, "
-                            f"conflicts with x={op.x}",
-                        )
-                    )
-                else:
-                    x_axes[op.x_axis] = op.x
-            if op.y_axis is not None:
-                if op.y_axis in y_axes and y_axes[op.y_axis] != op.y:
-                    self.diagnostics.append(
-                        Diagnostic(
-                            "error",
-                            f"Outline point '{op.id}'",
-                            f"y_axis '{op.y_axis}' was already assigned to y={y_axes[op.y_axis]}, "
-                            f"conflicts with y={op.y}",
-                        )
-                    )
-                else:
-                    y_axes[op.y_axis] = op.y
         return (
-            tuple(sorted(x_axes.items(), key=lambda t: t[1])),
-            tuple(sorted(y_axes.items(), key=lambda t: t[1])),
+            tuple(sorted(((label, x) for x, label in self._x_labels.items()), key=lambda t: t[1])),
+            tuple(sorted(((label, y) for y, label in self._y_labels.items()), key=lambda t: t[1])),
         )
 
     def resolve(self) -> ResolvedModel | None:
@@ -207,9 +254,10 @@ class _Resolver:
         ops = self.bf.outline
         n = len(ops)
         thickness = self.bf.building.exterior_wall_thickness
+        ids = [self._outline_point_id(op) for op in ops]
         return [
             ResolvedWall(
-                id=f"EXT_{ops[i].id}_{ops[(i + 1) % n].id}",
+                id=f"EXT_{ids[i]}_{ids[(i + 1) % n]}",
                 p_from=(ops[i].x, ops[i].y),
                 p_to=(ops[(i + 1) % n].x, ops[(i + 1) % n].y),
                 thickness=thickness,
