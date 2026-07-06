@@ -1,0 +1,53 @@
+flowchart TB
+
+subgraph INPUT["📥 Input Methods"]
+    HAND["Hand-written YAML<br/>(you, in any editor)"]
+    AICHAT["AI generation<br/>(Claude writes/edits files)"]
+    PDFX["PDF extractor<br/>(existing plan → data)"]
+end
+
+subgraph CORE["📄 Declarative Core — single source of truth (Git repo)"]
+    L1["Layer 1: GEOMETRY<br/>geometry.yaml<br/>walls, openings, rooms<br/>(pure math, coordinates)"]
+    L2["Layer 2: SEMANTICS<br/>semantics.yaml<br/>room functions, zones,<br/>abstract furniture placement"]
+    L3["Layer 3: APPEARANCE<br/>appearance.yaml<br/>materials, colors,<br/>real product mapping"]
+    CATALOG["products.yaml<br/>product catalog<br/>(dimensions, prices, links)"]
+    L1 --> L2 --> L3
+    CATALOG -.-> L3
+end
+
+subgraph ENGINE["⚙️ Processing Engines"]
+    VALID["Validator<br/>schema check + spatial rules:<br/>overlaps, clearances, door swings"]
+    R2D["2D Renderer<br/>YAML → SVG floor plans"]
+    G3D["3D Generator<br/>YAML → glTF scene<br/>(Blender Python API)"]
+    RENDER["Photoreal Renderer<br/>Blender Cycles, headless"]
+    AIIMG["AI Image Variations<br/>(optional, style exploration)"]
+end
+
+subgraph AI["🤖 AI Access Layer"]
+    MCP["MCP server / CLI<br/>read, edit, validate, render<br/>= how Claude operates the tool"]
+end
+
+subgraph OUT["📤 Outputs"]
+    SVG["SVG floor plans<br/>(geometry / furniture / materials views)"]
+    WEB["Interactive 3D<br/>(Three.js in browser)"]
+    IMG["Photorealistic renders"]
+    BOM["Shopping list (BOM)<br/>products, quantities, cost"]
+end
+
+HAND --> CORE
+AICHAT --> CORE
+PDFX --> L1
+
+CORE --> VALID
+VALID --> R2D --> SVG
+VALID --> G3D --> WEB
+G3D --> RENDER --> IMG
+RENDER -.-> AIIMG -.-> IMG
+L3 --> BOM
+CATALOG --> BOM
+
+MCP <--> CORE
+MCP --> VALID
+MCP --> R2D
+MCP --> G3D
+MCP --> RENDER

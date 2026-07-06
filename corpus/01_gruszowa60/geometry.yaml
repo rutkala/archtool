@@ -1,0 +1,79 @@
+# =====================================================================
+#  Dom Gruszowa 60 — corpus entry #1 for the archtool v2 language
+#  Converted from the v1 point-based fixture. Same geometry, same ids
+#  where they survive. Findings from this conversion are tracked in the
+#  language changelog (see notes at bottom).
+#  Interpretation governed by the v2 Language Reference (draft.1).
+# =====================================================================
+
+building:
+  name: "Dom Gruszowa 60"
+  format_version: "2.0"
+
+# The v1 file had auto-labeled perimeter axes plus a flat `points:` list
+# for everything interior. In v2 the grid IS that vocabulary, declared
+# once — interior axes (x "6b", y "C1", "E"…) are first-class lines.
+grid:
+  x: { "1": 0, "2": 240, "3": 645, "4": 975, "5": 1240,
+       "6": 1850, "6b": 1980, "7": 2470, "8": 2718, "8a": 2748 }
+  y: { "A": 0, "B": 100, "C": 200, "C1": 268, "D": 494, "E": 574,
+       "E1": 690, "E2": 715, "F": 870, "G": 949, "H": 1110 }
+
+levels:
+  - { id: ground, ceiling_height: 285 }
+
+defaults:
+  exterior:     { thickness: 30 }                    # shell profile
+  load_bearing: { thickness: 30 }                    # auto-applied by wall type
+  partition:    { thickness: 15 }                    # auto-applied by wall type
+  door:         { width: 90, height: 200, sill: 0 }
+  window:       { width: 90, height: 110, sill: 90 }
+
+shell:
+  ground:
+    outline: [1C, 2C, 2A, 3A, 3C, 5C, 5B, 8B, 8D, 8aD,
+              8aG, 7G, 7H, 6H, 6F, 4F, 4H, 3H, 3G, 1G]
+    wall: exterior
+    edges:                       # aliases for the edges that host openings
+      utility_west:  [2C, 2A]    # x=240, utility room's west face
+      utility_north: [2A, 3A]    # y=0
+      garage_south:  [3G, 1G]    # y=949
+
+walls:
+  # v1 point names in comments for traceability.
+  - { id: s_3,  from: 3C,  to: 3G,  type: load_bearing }          # spans two shell corners
+  - { id: s_4,  from: 4E,  to: 4F,  type: load_bearing }          # w4E → o4E
+  - { id: s_6,  from: 6E,  to: 6F,  type: load_bearing }          # w6E → o6E
+  - { id: s_6b, from: 6bD, to: 6bE, type: load_bearing }          # w6D1 → w6E1 (free lower end)
+  - { id: s_8D, from: 6bD, to: 8D,  type: load_bearing }          # w6D1 → o8D (shell corner)
+  - { id: s_E,  from: 3E,  to: 6E,  type: load_bearing }          # T-junction on s_3 at its start
+
+  # The exterior wall above (30cm, axis x=240) and d_pgv (15cm) share the
+  # same axis; "left" keeps d_pgv flush with the exterior face on the
+  # utility-room side while sharing connection point 2C.
+  - { id: d_pgv, from: 2C,  to: 2C1, type: partition, justify: left }
+  - { id: d_pgh, from: 2C1, to: 3C1, type: partition }            # T on s_3 at its end
+  - { id: d_sph, from: 3E2, to: 4E2, type: partition }            # T on s_3 and on s_4
+  - { id: d_wtv, from: 5E,  to: 5E1, type: partition, justify: right }  # T on s_E; free end
+
+openings:
+  # v1: two endpoint coordinates each. v2: host + at + width.
+  # 200cm structural pass-through (too wide for a real door leaf).
+  # NOTE: v1 comment said 185cm but v1 endpoints (w5E→oE2) measure 200cm
+  # — the conversion surfaced this discrepancy; 200 kept as source truth.
+  - { id: D1, in: s_E, at: 595, type: empty_space, width: 200, height: 200 }
+
+  # width/height/sill come from the door/window profiles in defaults:
+  - { id: D_utility,   in: shell.utility_north, at: 40,  type: door }
+  - { id: W_utility,   in: shell.utility_west,  at: 50,  type: window }
+  - { id: Gate_garage, in: shell.garage_south,  at: 265, type: garage_gate,
+      width: 280, height: 220 }
+
+rooms:
+  # v1 traced each room outline point-by-point (6 points for the garage).
+  # v2: one interior seed each; polygons, areas, adjacency are derived.
+  - { id: garaz,    name: "Garage",       seed: [320, 600] }
+  - { id: pom_gosp, name: "Utility room", seed: [440, 130] }
+  # The rest of the plan intentionally has no rooms yet → the validator
+  # reports the unclaimed regions as W01 (info), exactly like v1's
+  # partial-coverage behaviour.

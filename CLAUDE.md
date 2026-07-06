@@ -12,6 +12,9 @@ outputs: floor plans, 3D models, interior layouts, renders, technical drawings,
 and a bill of materials. **No AI is involved at build time.** Compilation is
 pure, mechanical, and repeatable.
 
+Long-term product vision and design philosophy: see VISION.md (background;
+does not change the current scope).
+
 ### Critical framing: the product is the TOOL, not any one building
 
 The repository contains an example building (`examples/example_house/dom_dane.yaml`)
@@ -66,6 +69,19 @@ is interpreted — coordinate system, wall axes, openings, materials→colours, 
 the formal-rules framework. Implement validation and backends to follow @SPEC.md
 exactly. If SPEC.md is ambiguous, ask rather than guess. The YAML declares which
 spec version it targets via `building.format_version`.
+
+## v2 language work (docs/ + corpus/)
+
+A v2 redesign of the *language* (not of the compiler discipline) is underway.
+**docs/DECISIONS.md (the decision log, D01–D17) and docs/language/reference.md
+govern all v2 work** — on conflicts, DECISIONS.md wins over every other
+document, and newer D-numbers win over older text anywhere. Start any v2
+session by reading docs/HANDOFF.md. Working rules: docs are the contract
+(change reference/spec first, code second); any design choice not covered by
+an existing D-entry gets a new decision-log entry BEFORE implementation;
+language changes are validated by re-authoring the corpus (corpus/), not by
+intuition. v1 code and SPEC.md stay untouched — v1 remains valid for
+format_version 1.x files and is the migration source.
 
 ## Validation (the heart of correctness)
 
